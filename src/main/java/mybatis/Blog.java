@@ -1,12 +1,20 @@
 package mybatis;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Table(name="Customer")
 public class Blog
 {
+	@Id
+	@Column(name = "id")
 	private Integer id;
 
+	@Column(name = "firstName")
 	private String firstName;
 	
+	@Column(name = "lastName")
 	private String lastName;
 	
 	public Integer getId()

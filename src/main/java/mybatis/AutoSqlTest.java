@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import mybatis.override.MySqlSessionFactoryBuilder;
 
-public class Test
+public class AutoSqlTest
 {
 	public static void main(String[] args) throws IOException
 	{
@@ -24,12 +24,14 @@ public class Test
 		  
 		  Blog blog = 
 //				  mapper.selectBlog(1); 
-		  		mapper.findById(1);
+		  		mapper.findByIdAndFirstName(1, "OY", "");
 		  System.out.println(blog);
 		} finally {
 			session.commit();
 		  session.close();
 		}
+		
+		
 	}
 
 	static void insert(BlogMapper mapper) {

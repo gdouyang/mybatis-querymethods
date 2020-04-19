@@ -3,6 +3,15 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+  <settings>
+  	<setting name="logImpl" value="STDOUT_LOGGING" />
+  </settings>
+  
+  <plugins>
+<!--   	<plugin interceptor="mybatis.intercepts.SQLStatsInterceptor"></plugin> -->
+  	<plugin interceptor="mybatis.intercepts.TestInterceptor"></plugin>
+  </plugins>
+  
   <environments default="development">
     <environment id="development">
       <transactionManager type="JDBC"/>
@@ -16,5 +25,7 @@
   </environments>
   <mappers>
     <mapper resource="mybatis/BlogMapper.xml"/>
+    <mapper resource="tkmapper/BlogMapper1.xml"/>
   </mappers>
+  
 </configuration>

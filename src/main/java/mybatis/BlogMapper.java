@@ -12,5 +12,5 @@ public interface BlogMapper extends Mapper<Blog>
 	
 //	@Select("select * from Customer where id = #{id}")
 	@AutoSql
-	Blog findById(int id);
+	Blog findByIdAndFirstName(int id, String name, String name1);
 }
