@@ -9,7 +9,7 @@
   
   <plugins>
 <!--   	<plugin interceptor="mybatis.intercepts.SQLStatsInterceptor"></plugin> -->
-  	<plugin interceptor="mybatis.intercepts.TestInterceptor"></plugin>
+  	<plugin interceptor="mybatis.intercepts.MethodQueryInterceptor"></plugin>
   </plugins>
   
   <environments default="development">
@@ -25,7 +25,7 @@
   </environments>
   <mappers>
     <mapper resource="mybatis/BlogMapper.xml"/>
-    <mapper resource="tkmapper/BlogMapper1.xml"/>
+<!--     <mapper resource="tkmapper/BlogMapper1.xml"/> -->
   </mappers>
   
 </configuration>

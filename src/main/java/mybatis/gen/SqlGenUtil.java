@@ -18,17 +18,25 @@ public class SqlGenUtil {
 	static Config config = new Config();
 	
 	public static String[] gen(Method method, Class<?> type) {
+		String sqlXml = gen(method.getName(), type, config);
+		if(null == sqlXml) {
+			return null;
+		}
+		return new String[] { sqlXml };
+	}
+	
+	public static String gen(String methodName, Class<?> type, Config config) {
 		Class<?> entityClass = getEntityClass(type);
 		
 		if(entityClass != null) {
-			PartTree tree = new PartTree(method.getName());
+			PartTree tree = new PartTree(methodName);
 			EntityHelper.initEntityNameMap(entityClass, config);
 			String xmlSql = null;
 			if(tree.isCountProjection()) {
 				xmlSql = selectCountByExample(entityClass);
 			}
 			xmlSql = selectByExample(entityClass);
-			return new String[] {  "<script>\n\t" + xmlSql + "</script>" };
+			return "<script>\n\t" + xmlSql + "</script>";
 		}
 		return null;
 	}

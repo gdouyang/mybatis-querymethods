@@ -1,7 +1,8 @@
 package mybatis;
 
 
-import mybatis.annotation.AutoSql;
+import org.apache.ibatis.annotations.Select;
+
 import tk.mybatis.mapper.common.Mapper;
 
 public interface BlogMapper extends Mapper<Blog>
@@ -10,7 +11,10 @@ public interface BlogMapper extends Mapper<Blog>
 	
 	void insert1(Blog b);
 	
-//	@Select("select * from Customer where id = #{id}")
-	@AutoSql
-	Blog findByIdAndFirstName(int id, String name, String name1);
+	@Select("")
+//	@AutoSql
+	Blog findByIdAndFirstName(int id, String name);
+	
+	@Select("")
+	Blog findByIdOrFirstName(int id, String name);
 }
