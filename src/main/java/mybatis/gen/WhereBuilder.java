@@ -7,6 +7,12 @@ import mybatis.query.Part.Type;
 import mybatis.query.PropertyPath;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
+/**
+ * where条件构建类 参考spring data PredicateBuilder
+ * 
+ * @author OYGD
+ *
+ */
 public class WhereBuilder {
 
 		/**

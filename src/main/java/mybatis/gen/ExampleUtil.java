@@ -5,6 +5,7 @@ import java.util.Queue;
 import mybatis.query.Part;
 import mybatis.query.PartTree;
 import mybatis.query.PartTree.OrPart;
+import mybatis.query.PartTreeFactory;
 import tk.mybatis.mapper.entity.Example;
 
 public class ExampleUtil {
@@ -20,15 +21,12 @@ public class ExampleUtil {
 	 * @throws ClassNotFoundException
 	 */
 	public static Example getExampleByMsId(String msId, Queue<Object> params) throws ClassNotFoundException {
-		int lastIndexOf = msId.lastIndexOf(".");
-		String mapperName = msId.substring(0, lastIndexOf);
+		
+		Class<?> entityClass = MsIdUtil.getEntityClass(msId);
 
-		Class<?> clazz = Class.forName(mapperName);
-		Class<?> entityClass = SqlUtil.getEntityClass(clazz);
+		String methodName = MsIdUtil.getMethodName(msId);
 
-		String methodName = msId.substring(lastIndexOf + 1);
-
-		PartTree tree = new PartTree(methodName);
+		PartTree tree = PartTreeFactory.create(msId, methodName);
 
 		Example example = new Example(entityClass);
 		Example.Criteria criteria = example.createCriteria();
