@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="querymethods.BlogMapper">
+  <select id="selectBlog" resultType="querymethods.Blog">
+    select * from Customer where id = #{id}
+  </select>
+  
+  <insert id="insert1" parameterType="querymethods.Blog">
+  	insert into Customer(id, firstName, lastName) values(#{id}, #{firstName}, #{lastName})
+  </insert>
+</mapper>
