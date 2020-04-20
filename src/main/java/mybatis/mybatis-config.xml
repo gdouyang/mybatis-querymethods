@@ -8,8 +8,7 @@
   </settings>
   
   <plugins>
-<!--   	<plugin interceptor="mybatis.intercepts.SQLStatsInterceptor"></plugin> -->
-  	<plugin interceptor="mybatis.intercepts.MethodQueryInterceptor"></plugin>
+  	<plugin interceptor="mybatis.intercepts.QueryMethodsInterceptor"></plugin>
   </plugins>
   
   <environments default="development">

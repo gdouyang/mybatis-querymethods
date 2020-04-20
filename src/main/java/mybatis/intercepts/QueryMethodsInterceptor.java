@@ -17,16 +17,17 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import mybatis.gen.MethodQueryHelper;
-import mybatis.gen.SqlGenUtil;
-import mybatis.gen.WhereBuilder;
-import mybatis.query.Part;
-import mybatis.query.PartTree;
-import mybatis.query.PartTree.OrPart;
+import mybatis.gen.ExampleUtil;
+import mybatis.gen.QueryMethodsHelper;
 import tk.mybatis.mapper.entity.Example;
 
+/**
+ * 查询方法拦截器
+ * @author OYGD
+ *
+ */
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) })
-public class MethodQueryInterceptor implements Interceptor {
+public class QueryMethodsInterceptor implements Interceptor {
 	
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
@@ -37,8 +38,8 @@ public class MethodQueryInterceptor implements Interceptor {
 		RowBounds rbs = (RowBounds)args[2];
 		ResultHandler rh = (ResultHandler)args[3];
 		
-		String id = ms.getId();
-		if(MethodQueryHelper.isMethodQuery(id)) {
+		String msId = ms.getId();
+		if(QueryMethodsHelper.isQueryMethods(msId)) {
 			SqlSource sqlSource = ms.getSqlSource();
 			if(parameter instanceof ParamMap) {
 				ParamMap<Object> pm = (ParamMap)parameter;
@@ -54,25 +55,7 @@ public class MethodQueryInterceptor implements Interceptor {
 					}
 				}
 				
-				int lastIndexOf = id.lastIndexOf(".");
-				String mapperName = id.substring(0, lastIndexOf);
-				
-				Class<?> clazz = Class.forName(mapperName);
-				Class<?> entityClass = SqlGenUtil.getEntityClass(clazz);
-				
-				String methodName = id.substring(lastIndexOf + 1);
-				
-				PartTree tree = new PartTree(methodName);
-				
-				Example example = new Example(entityClass);
-				Example.Criteria criteria = example.createCriteria();
-				for (OrPart node : tree) {
-					for (Part part : node) {
-						WhereBuilder.build(part, criteria, params);
-					}
-					criteria = example.createCriteria();
-					example.or(criteria);
-				}
+				Example example = ExampleUtil.getExampleByMsId(msId, params);
 				
 				return invocation.getMethod().invoke(executor, ms, example, rbs, rh);
 			}

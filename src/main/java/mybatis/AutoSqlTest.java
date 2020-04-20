@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import mybatis.gen.MethodQueryHelper;
+import mybatis.gen.QueryMethodsHelper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
@@ -46,7 +46,7 @@ public class AutoSqlTest
 		//4.0 之后的版本，如果类似 Mapper.class 这样的基础接口带有 @RegisterMapper 注解，就不必在这里注册
 		mapperHelper.registerMapper(Mapper.class);
 		mapperHelper.processConfiguration(session.getConfiguration());
-		MethodQueryHelper.processConfiguration(session.getConfiguration(), mapperHelper);
+		QueryMethodsHelper.processConfiguration(session.getConfiguration(), mapperHelper);
 				
 		try {
 		  BlogMapper mapper = session.getMapper(BlogMapper.class);

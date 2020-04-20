@@ -1,8 +1,8 @@
 package mybatis.gen;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.BoundSql;
@@ -17,18 +17,24 @@ import org.apache.ibatis.session.Configuration;
 
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
-public class MethodQueryHelper {
+/**
+ * 查询方法帮助类，通过方法名称动态的生成sql
+ * @author OYGD
+ *
+ */
+public class QueryMethodsHelper {
 
-	private MethodQueryHelper() {
+	private QueryMethodsHelper() {
 	}
 	
-	private static final Set<String> methodQuery = new HashSet<>();
+	private static final Map<String, Boolean> queryMethod = new HashMap<>();
 	
-	public static boolean isMethodQuery(String id) {
-		return methodQuery.contains(id);
+	public static boolean isQueryMethods(String msId) {
+		return queryMethod.containsKey(msId);
 	}
 
 	public static void processConfiguration(Configuration configuration, MapperHelper mapperHelper) {
+		
 		Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();
 		for (Object object : mappedStatements) {
 			if (object instanceof MappedStatement) {
@@ -37,32 +43,29 @@ public class MethodQueryHelper {
 				if (sqlSource instanceof ProviderSqlSource || sqlSource instanceof DynamicSqlSource) {
 					continue;
 				}
-				String id = ms.getId();
+				String msId = ms.getId();
 				BoundSql boundSql = sqlSource.getBoundSql(null);
 				String sql = boundSql.getSql();
 				if (SqlCommandType.SELECT.equals(ms.getSqlCommandType()) && "".equals(sql)) {
 
-					int lastIndexOf = id.lastIndexOf(".");
-					String mapperName = id.substring(0, lastIndexOf);
-					String methodName = id.substring(lastIndexOf + 1);
 					try {
-						methodQuery.add(id);
+						queryMethod.put(msId, Boolean.TRUE);
+
+						String xmlSql = SqlUtil.getSqlByMsId(msId, mapperHelper.getConfig());
 						
-						Class<?> mapperClass = Class.forName(mapperName);
-//        				Class<?> entityClass = SqlGenUtil.getEntityClass(mapperClass);
-
-						String xmlSql = SqlGenUtil.gen(methodName, mapperClass, mapperHelper.getConfig());
 						LanguageDriver defaultDriver = configuration.getLanguageRegistry().getDefaultDriver();
+						
 						SqlSource s = defaultDriver.createSqlSource(ms.getConfiguration(), xmlSql, null);
-
+						// 重新设置SqlSource
 						MetaObject msObject = SystemMetaObject.forObject(ms);
 						msObject.setValue("sqlSource", s);
 
 					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+						throw new RuntimeException(e);
 					}
 				}
 			}
 		}
 	}
+	
 }
