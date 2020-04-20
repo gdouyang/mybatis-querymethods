@@ -17,8 +17,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import querymethods.gen.ExampleUtil;
-import querymethods.gen.QueryMethodsHelper;
+import querymethods.QueryMethodsHelper;
+import querymethods.util.ExampleUtil;
 import tk.mybatis.mapper.entity.Example;
 
 /**

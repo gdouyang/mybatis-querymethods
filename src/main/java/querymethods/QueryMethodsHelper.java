@@ -1,4 +1,4 @@
-package querymethods.gen;
+package querymethods;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.session.Configuration;
 
+import querymethods.util.SqlUtil;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
 /**

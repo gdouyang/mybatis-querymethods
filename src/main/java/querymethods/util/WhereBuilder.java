@@ -1,4 +1,4 @@
-package querymethods.gen;
+package querymethods.util;
 
 import java.util.Queue;
 

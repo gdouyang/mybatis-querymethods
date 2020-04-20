@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import querymethods.Blog;
 import querymethods.BlogMapper;
-import querymethods.gen.QueryMethodsHelper;
+import querymethods.QueryMethodsHelper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;

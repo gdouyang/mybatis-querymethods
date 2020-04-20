@@ -1,4 +1,4 @@
-package querymethods.gen;
+package querymethods.util;
 
 import tk.mybatis.mapper.entity.EntityTable;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;

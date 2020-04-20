@@ -1,4 +1,4 @@
-package querymethods.gen;
+package querymethods.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
