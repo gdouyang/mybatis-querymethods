@@ -23,12 +23,16 @@ import tk.mybatis.mapper.entity.Example;
 
 /**
  * 查询方法拦截器
+ * 
  * @author OYGD
  *
  */
 @Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) })
 public class QueryMethodsInterceptor implements Interceptor {
 	
+	/**
+	 * 
+	 */
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		Executor executor = (Executor) invocation.getTarget();

@@ -8,6 +8,12 @@ import querymethods.query.PartTree.OrPart;
 import querymethods.query.PartTreeFactory;
 import tk.mybatis.mapper.entity.Example;
 
+/**
+ * Example工具类
+ * 
+ * @author OYGD
+ *
+ */
 public class ExampleUtil {
 
 	private ExampleUtil() {

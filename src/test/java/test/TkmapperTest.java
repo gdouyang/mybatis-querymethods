@@ -1,3 +1,4 @@
+package test;
 
 
 import java.io.IOException;
@@ -9,16 +10,20 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import querymethods.Blog;
-import querymethods.BlogMapper;
-import querymethods.QueryMethodsHelper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
+import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
+import tkmapper.BlogMapper1;
 
-public class AutoSqlTest
-{
-	public static void main(String[] args) throws IOException, ClassNotFoundException
-	{
+/**
+ * 
+ * @author OYGD
+ *
+ */
+public class TkmapperTest {
+	
+	public void test() throws IOException {
 		String resource = "mybatis-config.xml";
 		InputStream inputStream = Resources.getResourceAsStream(resource);
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -48,29 +53,17 @@ public class AutoSqlTest
 		//4.0 之后的版本，如果类似 Mapper.class 这样的基础接口带有 @RegisterMapper 注解，就不必在这里注册
 		mapperHelper.registerMapper(Mapper.class);
 		mapperHelper.processConfiguration(session.getConfiguration());
-		QueryMethodsHelper.processConfiguration(session.getConfiguration(), mapperHelper);
-				
 		try {
-		  BlogMapper mapper = session.getMapper(BlogMapper.class);
-		  
-//		  insert(mapper);
-		  
-		  Blog blog = mapper.findByIdOrFirstName(1, "OY1");
-		  System.out.println(blog);
-		  
-		  Integer countById = mapper.countById(1);
-		  System.out.println(countById);
+//			EntityHelper.initEntityNameMap(Blog.class, mapperHelper.getConfig());
+			BlogMapper1 mapper = session.getMapper(BlogMapper1.class);
+			Example example = new Example(Blog.class);
+			Example.Criteria criteria = example.createCriteria();
+			criteria.andEqualTo("id", 1);
+			Blog blog = mapper.selectOneByExample(example);
+			System.out.println(blog);
 		} finally {
 			session.commit();
-		  session.close();
+			session.close();
 		}
-	}
-	
-	static void insert(BlogMapper mapper) {
-		Blog b = new Blog();
-		  b.setId(1);
-		  b.setFirstName("OY");
-		  b.setLastName("GD");
-		  mapper.insert1(b);
 	}
 }

@@ -5,6 +5,11 @@ import tk.mybatis.mapper.mapperhelper.EntityHelper;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
 import tk.mybatis.mapper.util.StringUtil;
 
+/**
+ * TkMapper工具类
+ * @author OYGD
+ *
+ */
 public class TkMapperUtil {
 
 	private TkMapperUtil() {

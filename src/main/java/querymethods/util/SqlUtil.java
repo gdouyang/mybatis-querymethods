@@ -5,7 +5,7 @@ import querymethods.query.PartTreeFactory;
 import tk.mybatis.mapper.entity.Config;
 
 /**
- * 
+ * sql重写工具类
  * @author OYGD
  *
  */

@@ -1,3 +1,4 @@
+package test;
 
 
 import querymethods.Blog;
@@ -8,8 +9,14 @@ import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
+/**
+ * PartTreeTest
+ * @author OYGD
+ *
+ */
 public class PartTreeTest {
-	public static void main(String[] args) throws NoSuchMethodException, SecurityException {
+	
+	public void test() throws NoSuchMethodException, SecurityException {
 		
 		Class<?> entityClass = Blog.class;
 		PartTree tree = new PartTree("findNameByIdOrFirstNameLikeOrderById");

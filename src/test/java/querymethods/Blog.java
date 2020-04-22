@@ -6,6 +6,11 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * 实体类
+ * @author OYGD
+ *
+ */
 @Table(name="Customer")
 public class Blog
 {

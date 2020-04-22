@@ -5,6 +5,11 @@ import org.apache.ibatis.annotations.Select;
 
 import tk.mybatis.mapper.common.Mapper;
 
+/**
+ * query methods Mapper
+ * @author OYGD
+ *
+ */
 public interface BlogMapper extends Mapper<Blog>
 {
 	Blog selectBlog(int id);
