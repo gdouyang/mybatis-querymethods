@@ -23,8 +23,8 @@
     </environment>
   </environments>
   <mappers>
-    <mapper resource="querymethods/BlogMapper.xml"/>
-    <mapper resource="tkmapper/BlogMapper1.xml"/>
+    <mapper resource="BlogMapper.xml"/>
+    <mapper resource="BlogMapper1.xml"/>
   </mappers>
   
 </configuration>
