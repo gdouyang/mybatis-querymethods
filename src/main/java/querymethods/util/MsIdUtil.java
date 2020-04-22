@@ -32,6 +32,13 @@ public class MsIdUtil {
 		return cacheMethodName.getOrDefault(msId, _getMethodName(msId));
 	}
 
+	private static String _getMethodName(String msId) {
+		int lastIndexOf = msId.lastIndexOf(".");
+		String methodName = msId.substring(lastIndexOf + 1);
+		cacheMethodName.put(msId, methodName);
+		return methodName;
+	}
+	
 	/**
 	 * 通过msId来获取对应的MapperClass
 	 * 
@@ -41,6 +48,20 @@ public class MsIdUtil {
 	public static Class<?> getMapperClass(String msId) {
 		return cacheMapperClass.getOrDefault(msId, _getMapperClass(msId));
 	}
+	
+	private static Class<?> _getMapperClass(String msId) {
+		int lastIndexOf = msId.lastIndexOf(".");
+		String mapperName = msId.substring(0, lastIndexOf);
+
+		try {
+			Class<?> mapperClass = Class.forName(mapperName);
+			
+			cacheMapperClass.put(msId, mapperClass);
+			return mapperClass;
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	/**
 	 * 通过msId来获取对应的EntityClass
@@ -48,7 +69,12 @@ public class MsIdUtil {
 	 * @return
 	 */
 	public static Class<?> getEntityClass(String msId) {
-		return cacheEntityClass.getOrDefault(msId, getEntityClass(getMapperClass(msId)));
+		if(cacheEntityClass.containsKey(msId)) {
+			return cacheEntityClass.get(msId);
+		}
+		Class<?> entityClass = getEntityClass(getMapperClass(msId));
+		cacheEntityClass.put(msId, entityClass);
+		return entityClass;
 	}
 
 	/**
@@ -76,21 +102,6 @@ public class MsIdUtil {
 		return entityClass;
 	}
 
-	private static Class<?> _getMapperClass(String msId) {
-		int lastIndexOf = msId.lastIndexOf(".");
-		String mapperName = msId.substring(0, lastIndexOf);
 
-		try {
-			Class<?> mapperClass = Class.forName(mapperName);
-			return mapperClass;
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static String _getMethodName(String msId) {
-		int lastIndexOf = msId.lastIndexOf(".");
-		String methodName = msId.substring(lastIndexOf + 1);
-		return methodName;
-	}
+	
 }
