@@ -18,6 +18,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.32</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
