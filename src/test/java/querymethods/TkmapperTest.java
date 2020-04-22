@@ -1,4 +1,4 @@
-package test;
+package querymethods;
 
 
 import java.io.IOException;
@@ -9,7 +9,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import querymethods.Blog;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.Example;

@@ -1,4 +1,4 @@
-package test;
+package querymethods;
 
 
 import java.io.IOException;
@@ -8,10 +8,8 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.junit.Test;
 
-import querymethods.Blog;
-import querymethods.BlogMapper;
-import querymethods.QueryMethodsHelper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
@@ -23,11 +21,16 @@ import tk.mybatis.mapper.mapperhelper.MapperHelper;
  */
 public class AutoSqlTest
 {
-	public void test() throws IOException, ClassNotFoundException
-	{
+	@Test
+	public void test() {
 		String resource = "mybatis-config.xml";
-		InputStream inputStream = Resources.getResourceAsStream(resource);
-		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		SqlSessionFactory sqlSessionFactory = null;
+		try {
+			InputStream inputStream = Resources.getResourceAsStream(resource);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		SqlSession session = sqlSessionFactory.openSession();
 		
 		//创建一个MapperHelper

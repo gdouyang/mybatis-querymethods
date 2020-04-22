@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+
 /**
  * Miscellaneous object utility methods.
  *
@@ -35,7 +36,6 @@ import java.util.Map;
  * @author Chris Beams
  * @author Sam Brannen
  * @since 19.03.2004
- * @see ClassUtils
  * @see CollectionUtils
  * @see StringUtils
  */
@@ -51,40 +51,6 @@ public abstract class ObjectUtils {
 	private static final String EMPTY_ARRAY = ARRAY_START + ARRAY_END;
 	private static final String ARRAY_ELEMENT_SEPARATOR = ", ";
 
-
-	/**
-	 * Return whether the given throwable is a checked exception:
-	 * that is, neither a RuntimeException nor an Error.
-	 * @param ex the throwable to check
-	 * @return whether the throwable is a checked exception
-	 * @see java.lang.Exception
-	 * @see java.lang.RuntimeException
-	 * @see java.lang.Error
-	 */
-	public static boolean isCheckedException(Throwable ex) {
-		return !(ex instanceof RuntimeException || ex instanceof Error);
-	}
-
-	/**
-	 * Check whether the given exception is compatible with the specified
-	 * exception types, as declared in a throws clause.
-	 * @param ex the exception to check
-	 * @param declaredExceptions the exception types declared in the throws clause
-	 * @return whether the given exception is compatible
-	 */
-	public static boolean isCompatibleWithThrowsClause(Throwable ex, Class<?>... declaredExceptions) {
-		if (!isCheckedException(ex)) {
-			return true;
-		}
-		if (declaredExceptions != null) {
-			for (Class<?> declaredException : declaredExceptions) {
-				if (declaredException.isInstance(ex)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Determine whether the given object is an array:
@@ -213,61 +179,6 @@ public abstract class ObjectUtils {
 				enumValues.getClass().getComponentType().getName());
 	}
 
-	/**
-	 * Append the given object to the given array, returning a new array
-	 * consisting of the input array contents plus the given object.
-	 * @param array the array to append to (can be {@code null})
-	 * @param obj the object to append
-	 * @return the new array (of the same component type; never {@code null})
-	 */
-	public static <A, O extends A> A[] addObjectToArray(A[] array, O obj) {
-		Class<?> compType = Object.class;
-		if (array != null) {
-			compType = array.getClass().getComponentType();
-		}
-		else if (obj != null) {
-			compType = obj.getClass();
-		}
-		int newArrLength = (array != null ? array.length + 1 : 1);
-		@SuppressWarnings("unchecked")
-		A[] newArr = (A[]) Array.newInstance(compType, newArrLength);
-		if (array != null) {
-			System.arraycopy(array, 0, newArr, 0, array.length);
-		}
-		newArr[newArr.length - 1] = obj;
-		return newArr;
-	}
-
-	/**
-	 * Convert the given array (which may be a primitive array) to an
-	 * object array (if necessary of primitive wrapper objects).
-	 * <p>A {@code null} source value will be converted to an
-	 * empty Object array.
-	 * @param source the (potentially primitive) array
-	 * @return the corresponding object array (never {@code null})
-	 * @throws IllegalArgumentException if the parameter is not an array
-	 */
-	public static Object[] toObjectArray(Object source) {
-		if (source instanceof Object[]) {
-			return (Object[]) source;
-		}
-		if (source == null) {
-			return new Object[0];
-		}
-		if (!source.getClass().isArray()) {
-			throw new IllegalArgumentException("Source is not an array: " + source);
-		}
-		int length = Array.getLength(source);
-		if (length == 0) {
-			return new Object[0];
-		}
-		Class<?> wrapperType = Array.get(source, 0).getClass();
-		Object[] newArray = (Object[]) Array.newInstance(wrapperType, length);
-		for (int i = 0; i < length; i++) {
-			newArray[i] = Array.get(source, i);
-		}
-		return newArray;
-	}
 
 
 	//---------------------------------------------------------------------

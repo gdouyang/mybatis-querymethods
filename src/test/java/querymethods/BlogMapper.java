@@ -17,7 +17,6 @@ public interface BlogMapper extends Mapper<Blog>
 	void insert1(Blog b);
 	
 	@Select("")
-//	@AutoSql
 	Blog findByIdAndFirstName(int id, String name);
 	
 	@Select("")

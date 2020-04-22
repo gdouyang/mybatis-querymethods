@@ -1,7 +1,6 @@
-package test;
+package querymethods;
 
 
-import querymethods.Blog;
 import querymethods.query.Part;
 import querymethods.query.PartTree;
 import querymethods.query.PartTree.OrPart;
@@ -16,7 +15,7 @@ import tk.mybatis.mapper.mapperhelper.EntityHelper;
  */
 public class PartTreeTest {
 	
-	public void test() throws NoSuchMethodException, SecurityException {
+	public static void main(String[] agrs) throws NoSuchMethodException, SecurityException {
 		
 		Class<?> entityClass = Blog.class;
 		PartTree tree = new PartTree("findNameByIdOrFirstNameLikeOrderById");
