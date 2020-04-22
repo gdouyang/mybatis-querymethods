@@ -69,9 +69,10 @@ public class MsIdUtil {
 	 * @return
 	 */
 	public static Class<?> getEntityClass(String msId) {
-		if(cacheEntityClass.containsKey(msId)) {
-			return cacheEntityClass.get(msId);
-		}
+		return cacheEntityClass.getOrDefault(msId, _getEntityClass(msId));
+	}
+	
+	private static Class<?> _getEntityClass(String msId) {
 		Class<?> entityClass = getEntityClass(getMapperClass(msId));
 		cacheEntityClass.put(msId, entityClass);
 		return entityClass;
