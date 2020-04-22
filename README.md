@@ -20,3 +20,12 @@ public interface BlogMapper extends Mapper<Blog>
 	Integer countById(int id);
 }
 ```
+
+```
+CREATE TABLE `Customer` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(255) DEFAULT NULL,
+  `lastName` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+```
