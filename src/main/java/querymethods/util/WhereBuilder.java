@@ -52,17 +52,8 @@ public class WhereBuilder {
 					return root.andLike(segment, args.poll().toString() + "%");
 				case CONTAINING:
 					return root.andLike(segment, "%" + args.poll().toString() + "%");
-//				case NOT_CONTAINING:
-//
-//					if (property.getLeafProperty().isCollection()) {
-//
-//						Expression<Collection<Object>> propertyExpression = traversePath(root, property);
-//						Expression<Object> parameterExpression = provider.next(part).getExpression();
-//
-//						// Can't just call .not() in case of negation as EclipseLink chokes on that.
-//						return type.equals(NOT_CONTAINING) ? builder.isNotMember(parameterExpression, propertyExpression)
-//								: builder.isMember(parameterExpression, propertyExpression);
-//					}
+				case NOT_CONTAINING:
+					return root.andNotIn(segment, (Iterable)args.poll());
 				case LIKE:
 					return root.andLike(segment, args.poll().toString());
 				case NOT_LIKE:
@@ -73,9 +64,8 @@ public class WhereBuilder {
 					return root.andEqualTo(segment, false);
 				case SIMPLE_PROPERTY:
 					return root.andEqualTo(segment, args.poll());
-//				case NEGATING_SIMPLE_PROPERTY:
-//					return builder.notEqual(upperIfIgnoreCase(getTypedPath(root, part)),
-//							upperIfIgnoreCase(provider.next(part).getExpression()));
+				case NEGATING_SIMPLE_PROPERTY:
+					return root.andNotEqualTo(segment, args.poll());
 				default:
 					throw new IllegalArgumentException("Unsupported keyword " + type);
 			}
