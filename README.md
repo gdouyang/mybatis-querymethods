@@ -3,6 +3,20 @@
 - 通过QueryMethodsHelper来重新生成sqlSource
 - 通过QueryMethodsInterceptor来生成where条件
 
+spring boot 启动方式
+```
+@Component
+public class QuerymethodsConfig implements ApplicationListener<ApplicationStartedEvent> {
+
+	@Override
+	public void onApplicationEvent(ApplicationStartedEvent event) {
+		SqlSessionFactory factory = event.getApplicationContext().getBean(SqlSessionFactory.class);
+		QueryMethodsHelper.processConfiguration(factory.getConfiguration());
+		
+	}
+}
+```
+
 在Mapper使用`Select`注解，给于空字符串
 ```
 public interface BlogMapper extends Mapper<Blog>

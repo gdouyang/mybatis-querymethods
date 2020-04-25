@@ -53,7 +53,7 @@ public class BaseTest {
 		//4.0 之后的版本，如果类似 Mapper.class 这样的基础接口带有 @RegisterMapper 注解，就不必在这里注册
 		mapperHelper.registerMapper(Mapper.class);
 		mapperHelper.processConfiguration(sqlSessionFactory.getConfiguration());
-		QueryMethodsHelper.processConfiguration(sqlSessionFactory.getConfiguration(), mapperHelper);
+		QueryMethodsHelper.processConfiguration(sqlSessionFactory.getConfiguration());
 		
 	}
 

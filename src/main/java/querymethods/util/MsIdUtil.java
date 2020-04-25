@@ -2,7 +2,9 @@ package querymethods.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -38,7 +40,7 @@ public class MsIdUtil {
 		cacheMethodName.put(msId, methodName);
 		return methodName;
 	}
-	
+
 	/**
 	 * 通过msId来获取对应的MapperClass
 	 * 
@@ -48,14 +50,14 @@ public class MsIdUtil {
 	public static Class<?> getMapperClass(String msId) {
 		return cacheMapperClass.getOrDefault(msId, _getMapperClass(msId));
 	}
-	
+
 	private static Class<?> _getMapperClass(String msId) {
 		int lastIndexOf = msId.lastIndexOf(".");
 		String mapperName = msId.substring(0, lastIndexOf);
 
 		try {
 			Class<?> mapperClass = Class.forName(mapperName);
-			
+
 			cacheMapperClass.put(msId, mapperClass);
 			return mapperClass;
 		} catch (ClassNotFoundException e) {
@@ -65,17 +67,24 @@ public class MsIdUtil {
 
 	/**
 	 * 通过msId来获取对应的EntityClass
+	 * 
 	 * @param msId
 	 * @return
 	 */
 	public static Class<?> getEntityClass(String msId) {
 		return cacheEntityClass.getOrDefault(msId, _getEntityClass(msId));
 	}
-	
+
 	private static Class<?> _getEntityClass(String msId) {
 		Class<?> entityClass = getEntityClass(getMapperClass(msId));
 		cacheEntityClass.put(msId, entityClass);
 		return entityClass;
+	}
+
+	public static List<Class<?>> mapperClasss = new ArrayList<>();
+
+	static {
+		mapperClasss.add(Mapper.class);
 	}
 
 	/**
@@ -90,7 +99,7 @@ public class MsIdUtil {
 		if (genericInterfaces != null && genericInterfaces.length > 0) {
 			for (Type type1 : genericInterfaces) {
 				ParameterizedType t = ((ParameterizedType) type1);
-				if (t.getRawType() == Mapper.class) {
+				if (mapperClasss.contains(t.getRawType())) {
 					try {
 						entityClass = Class.forName(t.getActualTypeArguments()[0].getTypeName());
 					} catch (ClassNotFoundException e) {
@@ -103,6 +112,4 @@ public class MsIdUtil {
 		return entityClass;
 	}
 
-
-	
 }

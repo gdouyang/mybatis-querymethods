@@ -2,7 +2,6 @@ package querymethods.util;
 
 import querymethods.springdata.PartTreeFactory;
 import querymethods.springdata.query.parser.PartTree;
-import tk.mybatis.mapper.entity.Config;
 
 /**
  * sql重写工具类
@@ -19,7 +18,7 @@ public class SqlUtil {
 	 * @return
 	 * @throws ClassNotFoundException 
 	 */
-	public static String getSqlByMsId(String msId, Config config) throws ClassNotFoundException {
+	public static String getSqlByMsId(String msId) throws ClassNotFoundException {
 		
 		Class<?> entityClass = MsIdUtil.getEntityClass(msId);
 		if (entityClass != null) {

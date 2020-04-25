@@ -16,7 +16,6 @@ import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
 import org.apache.ibatis.session.Configuration;
 
 import querymethods.util.SqlUtil;
-import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
 /**
  * 查询方法帮助类，通过方法名称动态的生成sql
@@ -39,7 +38,7 @@ public class QueryMethodsHelper {
 	 * @param configuration
 	 * @param mapperHelper
 	 */
-	public static void processConfiguration(Configuration configuration, MapperHelper mapperHelper) {
+	public static void processConfiguration(Configuration configuration) {
 		
 		Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();
 		for (Object object : mappedStatements) {
@@ -57,7 +56,7 @@ public class QueryMethodsHelper {
 					try {
 						queryMethod.put(msId, Boolean.TRUE);
 
-						String xmlSql = SqlUtil.getSqlByMsId(msId, mapperHelper.getConfig());
+						String xmlSql = SqlUtil.getSqlByMsId(msId);
 						
 						LanguageDriver defaultDriver = configuration.getLanguageRegistry().getDefaultDriver();
 						
