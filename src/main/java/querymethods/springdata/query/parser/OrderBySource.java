@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package querymethods.query;
+package querymethods.springdata.query.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +23,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import querymethods.query.domain.Sort;
-import querymethods.query.domain.Sort.Direction;
-import querymethods.query.domain.Sort.Order;
-import querymethods.query.util.StringUtils;
+import querymethods.springdata.mapping.PropertyPath;
+import querymethods.springdata.query.domain.Sort;
+import querymethods.springdata.query.domain.Sort.Direction;
+import querymethods.springdata.query.domain.Sort.Order;
+import querymethods.springdata.util.StringUtils;
 
 /**
  * Simple helper class to create a {@link Sort} instance from a method name end. It expects the last part of the method
@@ -35,7 +36,7 @@ import querymethods.query.util.StringUtils;
  * 
  * @author Oliver Gierke
  */
-public class OrderBySource {
+class OrderBySource {
 
 	private static final String BLOCK_SPLIT = "(?<=Asc|Desc)(?=\\p{Lu})";
 	private static final Pattern DIRECTION_SPLIT = Pattern.compile("(.+?)(Asc|Desc)?$");

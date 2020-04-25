@@ -10,22 +10,28 @@ import tk.mybatis.mapper.common.Mapper;
  * @author OYGD
  *
  */
-public interface BlogMapper extends Mapper<Blog>
+public interface BlogMapper extends Mapper<Customer>
 {
-	Blog selectBlog(int id);
+	Customer selectBlog(int id);
 	
-	void insert1(Blog b);
-	
-	@Select("")
-	Blog findByIdAndFirstName(int id, String name);
+	void insert1(Customer b);
 	
 	@Select("")
-	Blog findByIdOrFirstName(int id, String name);
+	Customer findByIdAndFirstName(int id, String name);
 	
 	@Select("")
-	Blog findById(int id);
+	Customer findByIdOrFirstName(int id, String name);
+	
+	@Select("")
+	Customer findById(int id);
 	
 	@Select("")
 	Integer countById(int id);
+	
+	@Select("")
+	Customer findByFirstNameOrderByIdAsc(String name);
+	
+	@Select("")
+	Customer findByFirstNameStartingWith(String name);
 	
 }

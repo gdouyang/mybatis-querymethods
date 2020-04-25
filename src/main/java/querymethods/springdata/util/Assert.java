@@ -1,6 +1,4 @@
-package querymethods.query;
-
-import querymethods.query.util.StringUtils;
+package querymethods.springdata.util;
 
 public abstract class Assert {
 

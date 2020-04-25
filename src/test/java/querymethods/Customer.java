@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  *
  */
 @Table(name="Customer")
-public class Blog
+public class Customer
 {
 	@Id
 	@Column(name = "id")

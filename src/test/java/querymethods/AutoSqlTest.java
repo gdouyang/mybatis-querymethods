@@ -19,13 +19,13 @@ public class AutoSqlTest extends BaseTest {
 			Integer id = 1;
 			mapper.deleteByPrimaryKey(id);
 			
-			Blog b = new Blog();
+			Customer b = new Customer();
 			b.setId(id);
 			b.setFirstName("OY");
 			b.setLastName("GD");
 			mapper.insert1(b);
 
-			Blog blog = mapper.findByIdOrFirstName(id, "OY1");
+			Customer blog = mapper.findByIdOrFirstName(id, "OY1");
 			assert blog != null;
 
 			Integer countById = mapper.countById(id);
@@ -33,6 +33,10 @@ public class AutoSqlTest extends BaseTest {
 			
 			blog = mapper.findByIdAndFirstName(b.getId(), b.getFirstName());
 			assert blog != null; 
+			
+			mapper.findByFirstNameOrderByIdAsc(b.getFirstName());
+			
+			mapper.findByFirstNameStartingWith(b.getFirstName());
 			
 		} finally {
 			session.commit();

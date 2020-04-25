@@ -1,7 +1,7 @@
 package querymethods.util;
 
-import querymethods.query.PartTree;
-import querymethods.query.PartTreeFactory;
+import querymethods.springdata.PartTreeFactory;
+import querymethods.springdata.query.parser.PartTree;
 import tk.mybatis.mapper.entity.Config;
 
 /**

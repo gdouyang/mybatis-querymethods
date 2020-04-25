@@ -1,12 +1,7 @@
 package querymethods;
 
 
-import querymethods.query.Part;
-import querymethods.query.PartTree;
-import querymethods.query.PartTree.OrPart;
-import tk.mybatis.mapper.entity.Config;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.mapperhelper.EntityHelper;
+import querymethods.springdata.query.parser.PartTree;
 
 /**
  * PartTreeTest
@@ -17,21 +12,25 @@ public class PartTreeTest {
 	
 	public static void main(String[] agrs) throws NoSuchMethodException, SecurityException {
 		
-		Class<?> entityClass = Blog.class;
 		PartTree tree = new PartTree("findNameByIdOrFirstNameLikeOrderById");
-		Config config = new Config();
-		EntityHelper.initEntityNameMap(Blog.class, config);
-		Example example = new Example(Blog.class);
-		Example.Criteria criteria = example.createCriteria();
-		for (OrPart node : tree) {
-
-			for (Part part : node) {
-//				new WhereBuilder(part, criteria).build();
-			}
-		}
 		
 		System.out.println(tree);
-		System.out.println(tree.getSort());
+		
+		tree = new PartTree("findByFirstNameOrderByIdAscFristNameDesc");
+		
+		System.out.println(tree);
+		
+		tree = new PartTree("findAllOrderByIdAsc");
+		
+		System.out.println(tree);
+		
+		tree = new PartTree("find");
+		
+		System.out.println(tree);
+		
+		tree = new PartTree("findByFirstNameOrderByIdAsc");
+		
+		System.out.println(tree);
 	}
 	
 }

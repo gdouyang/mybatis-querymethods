@@ -55,10 +55,10 @@ public class TkmapperTest {
 		try {
 //			EntityHelper.initEntityNameMap(Blog.class, mapperHelper.getConfig());
 			BlogMapper1 mapper = session.getMapper(BlogMapper1.class);
-			Example example = new Example(Blog.class);
+			Example example = new Example(Customer.class);
 			Example.Criteria criteria = example.createCriteria();
 			criteria.andEqualTo("id", 1);
-			Blog blog = mapper.selectOneByExample(example);
+			Customer blog = mapper.selectOneByExample(example);
 			System.out.println(blog);
 		} finally {
 			session.commit();

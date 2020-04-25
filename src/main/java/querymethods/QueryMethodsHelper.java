@@ -34,6 +34,11 @@ public class QueryMethodsHelper {
 		return queryMethod.containsKey(msId);
 	}
 
+	/**
+	 * 对已经注册的Mapper文件做处理，如果方法上使用了@Select("")注册并且sql为空字符串时就会动态创建sql
+	 * @param configuration
+	 * @param mapperHelper
+	 */
 	public static void processConfiguration(Configuration configuration, MapperHelper mapperHelper) {
 		
 		Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package querymethods.query.util;
+package querymethods.springdata.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

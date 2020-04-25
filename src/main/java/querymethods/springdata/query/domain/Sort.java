@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package querymethods.query.domain;
+package querymethods.springdata.query.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import querymethods.query.util.StringUtils;
+import querymethods.springdata.util.StringUtils;
 
 /**
  * Sort option for queries. You have to provide at least a list of properties to sort for that must not include
@@ -31,7 +31,7 @@ import querymethods.query.util.StringUtils;
  * @author Oliver Gierke
  * @author Thomas Darimont
  */
-public class Sort implements Iterable<querymethods.query.domain.Sort.Order>, Serializable {
+public class Sort implements Iterable<querymethods.springdata.query.domain.Sort.Order>, Serializable {
 
 	private static final long serialVersionUID = 5737186511678863905L;
 	public static final Direction DEFAULT_DIRECTION = Direction.ASC;

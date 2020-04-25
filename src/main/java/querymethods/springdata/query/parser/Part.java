@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package querymethods.query;
+package querymethods.springdata.query.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import querymethods.query.util.StringUtils;
+import querymethods.springdata.mapping.PropertyPath;
+import querymethods.springdata.util.Assert;
+import querymethods.springdata.util.StringUtils;
 
 
 /**

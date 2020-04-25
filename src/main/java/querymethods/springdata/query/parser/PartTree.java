@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package querymethods.query;
+package querymethods.springdata.query.parser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import querymethods.query.Part.Type;
-import querymethods.query.PartTree.OrPart;
-import querymethods.query.domain.Sort;
-import querymethods.query.util.StringUtils;
+import querymethods.springdata.query.domain.Sort;
+import querymethods.springdata.query.parser.Part.Type;
+import querymethods.springdata.query.parser.PartTree.OrPart;
+import querymethods.springdata.util.Assert;
+import querymethods.springdata.util.StringUtils;
 
 /**
  * Class to parse a {@link String} into a tree or {@link OrPart}s consisting of simple {@link Part} instances in turn.
