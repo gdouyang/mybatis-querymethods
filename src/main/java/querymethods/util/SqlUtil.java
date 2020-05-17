@@ -1,5 +1,7 @@
 package querymethods.util;
 
+import org.apache.ibatis.mapping.MappedStatement;
+
 import querymethods.springdata.PartTreeFactory;
 import querymethods.springdata.query.parser.PartTree;
 
@@ -18,17 +20,18 @@ public class SqlUtil {
 	 * @return
 	 * @throws ClassNotFoundException 
 	 */
-	public static String getSqlByMsId(String msId) throws ClassNotFoundException {
-		
+	public static String getSqlByMs(MappedStatement ms) throws ClassNotFoundException {
+		String msId = ms.getId();
 		Class<?> entityClass = MsIdUtil.getEntityClass(msId);
 		if (entityClass != null) {
 			String methodName = MsIdUtil.getMethodName(msId);
 			PartTree tree = PartTreeFactory.create(msId, methodName);
 			String xmlSql = null;
+			
 			if (tree.isCountProjection()) {
 				xmlSql = TkMapperUtil.selectCountByExample(entityClass);
 			}else {
-				xmlSql = TkMapperUtil.selectByExample(entityClass);
+				xmlSql = TkMapperUtil.selectByExample(ms, entityClass);
 			}
 			return "<script>\n\t" + xmlSql + "</script>";
 		}

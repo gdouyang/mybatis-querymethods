@@ -89,8 +89,7 @@ public class QueryMethodsHelper {
 				}
 				queryMethod.put(msId, Boolean.TRUE);
 
-				String xmlSql = SqlUtil.getSqlByMsId(msId);
-				
+				String xmlSql = SqlUtil.getSqlByMs(ms);
 				SqlSource s = languageDriver.createSqlSource(ms.getConfiguration(), xmlSql, null);
 				// 重新设置SqlSource
 				MetaObject msObject = SystemMetaObject.forObject(ms);

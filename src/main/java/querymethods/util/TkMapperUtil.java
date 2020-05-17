@@ -1,7 +1,16 @@
 package querymethods.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.reflection.MetaObject;
+
 import tk.mybatis.mapper.entity.EntityTable;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
+import tk.mybatis.mapper.mapperhelper.MapperTemplate;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
 import tk.mybatis.mapper.util.StringUtil;
 
@@ -30,7 +39,11 @@ public class TkMapperUtil {
 	 * @param ms
 	 * @return
 	 */
-	public static String selectByExample(Class<?> entityClass) {
+	public static String selectByExample(MappedStatement ms, Class<?> entityClass) {
+		// 将返回值修改为实体类型
+		// tk.mybatis.mapper.provider.ExampleProvider#selectByExample
+		TkMapperUtil.setResultType(ms, entityClass);
+		
 		StringBuilder sql = new StringBuilder("SELECT ");
 		sql.append("<if test=\"distinct\">distinct</if>");
 		// 支持查询指定列
@@ -56,4 +69,19 @@ public class TkMapperUtil {
 		}
 		return entityTable.getName();
 	}
+	
+	/**
+     * 设置返回值类型 - 为了让typeHandler在select时有效，改为设置resultMap
+     *
+     * @param ms
+     * @param entityClass
+     * @see MapperTemplate#setResultType
+     */
+    public static void setResultType(MappedStatement ms, Class<?> entityClass) {
+        EntityTable entityTable = EntityHelper.getEntityTable(entityClass);
+        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+        resultMaps.add(entityTable.getResultMap(ms.getConfiguration()));
+        MetaObject metaObject = MetaObjectUtil.forObject(ms);
+        metaObject.setValue("resultMaps", Collections.unmodifiableList(resultMaps));
+    }
 }
