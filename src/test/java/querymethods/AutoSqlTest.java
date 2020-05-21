@@ -19,13 +19,13 @@ public class AutoSqlTest extends BaseTest {
 			Integer id = 1;
 			mapper.deleteByPrimaryKey(id);
 			
-			Customer b = new Customer();
+			Blog b = new Blog();
 			b.setId(id);
 			b.setFirstName("OY");
 			b.setLastName("GD");
 			mapper.insert1(b);
 
-			Customer blog = mapper.findByIdOrFirstName(id, "OY1");
+			Blog blog = mapper.findByIdOrFirstName(id, "OY1");
 			assert blog != null;
 
 			Integer countById = mapper.countById(id);

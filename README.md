@@ -5,6 +5,21 @@
 
 spring boot 启动方式
 ```
+@tk.mybatis.spring.annotation.MapperScan(
+		factoryBean = QueryMethodsMapperFactoryBean.class
+)
+@EnableTransactionManagement
+@SpringBootApplication
+public class QuickDuckApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(QuickDuckApplication.class, args);
+	}
+
+}
+```
+spring mvc启动方式
+```
 @Component
 public class QuerymethodsConfig implements ApplicationListener<ApplicationStartedEvent> {
 
@@ -36,7 +51,7 @@ public interface BlogMapper extends Mapper<Blog>
 ```
 
 ```
-CREATE TABLE `Customer` (
+CREATE TABLE `blog` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,

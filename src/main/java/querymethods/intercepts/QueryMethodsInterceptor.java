@@ -8,7 +8,6 @@ import java.util.Queue;
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -40,14 +39,14 @@ public class QueryMethodsInterceptor implements Interceptor {
 		MappedStatement ms = (MappedStatement)args[0];
 		Object parameter = args[1];
 		RowBounds rbs = (RowBounds)args[2];
-		ResultHandler rh = (ResultHandler)args[3];
+		ResultHandler<?> rh = (ResultHandler<?>)args[3];
 		
 		String msId = ms.getId();
 		if(QueryMethodsHelper.isQueryMethods(msId)) {
-			SqlSource sqlSource = ms.getSqlSource();
 			Queue<Object> params = new LinkedList<>();
 			if(parameter instanceof ParamMap) {
-				ParamMap<Object> pm = (ParamMap)parameter;
+				@SuppressWarnings("unchecked")
+				ParamMap<Object> pm = (ParamMap<Object>)parameter;
 				
 				String regex = "^param(\\d)+$";
 				String[] keys = pm.keySet().toArray(new String[] {});

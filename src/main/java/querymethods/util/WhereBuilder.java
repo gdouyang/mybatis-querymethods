@@ -43,9 +43,9 @@ public class WhereBuilder {
 				case IS_NOT_NULL:
 					return root.andIsNotNull(segment);
 				case NOT_IN:
-					return root.andNotIn(segment, (Iterable)args.poll());
+					return root.andNotIn(segment, (Iterable<?>)args.poll());
 				case IN:
-					return root.andIn(segment, (Iterable)args.poll());
+					return root.andIn(segment, (Iterable<?>)args.poll());
 				case STARTING_WITH:
 					return root.andLike(segment, "%" + args.poll().toString());
 				case ENDING_WITH:
@@ -53,7 +53,7 @@ public class WhereBuilder {
 				case CONTAINING:
 					return root.andLike(segment, "%" + args.poll().toString() + "%");
 				case NOT_CONTAINING:
-					return root.andNotIn(segment, (Iterable)args.poll());
+					return root.andNotIn(segment, (Iterable<?>)args.poll());
 				case LIKE:
 					return root.andLike(segment, args.poll().toString());
 				case NOT_LIKE:
