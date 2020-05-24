@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author OYGD
  *
  */
-@Table(name="Customer")
-public class Customer
+@Table(name="blog")
+public class Blog
 {
 	@Id
 	@Column(name = "id")

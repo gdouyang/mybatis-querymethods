@@ -38,7 +38,7 @@ public class PropertyPath implements Iterable<PropertyPath> {
 	private static final String PARSE_DEPTH_EXCEEDED = "Trying to parse a path with depth greater than 1000! This has been disabled for security reasons to prevent parsing overflows.";
 
 	private static final String DELIMITERS = "_\\.";
-	private static final String ALL_UPPERCASE = "[A-Z0-9._$]+";
+//	private static final String ALL_UPPERCASE = "[A-Z0-9._$]+";
 	private static final Pattern SPLITTER = Pattern.compile("(?:[%s]?([%s]*?[^%s]+))".replaceAll("%s", DELIMITERS));
 
 	private final String name;
