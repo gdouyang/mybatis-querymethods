@@ -1,6 +1,8 @@
 package querymethods;
 
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Select;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -33,5 +35,12 @@ public interface BlogMapper extends Mapper<Blog>
 	
 	@Select("")
 	Blog findByFirstNameStartingWith(String name);
+	
+	@Select("")
+	Blog findByIdInOrId(List<Integer> idList, Integer id);
+	
+	@Select("")
+	Blog findByIdIn(List<Integer> idList);
+	
 	
 }

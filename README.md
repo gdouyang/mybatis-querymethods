@@ -47,6 +47,12 @@ public interface BlogMapper extends Mapper<Blog>
 	
 	@Select("")
 	Integer countById(int id);
+	
+	@Select("")
+    Blog findByIdInOrId(List<Integer> idList, Integer id);
+    
+    @Select("")
+    Blog findByIdIn(List<Integer> idList);
 }
 ```
 

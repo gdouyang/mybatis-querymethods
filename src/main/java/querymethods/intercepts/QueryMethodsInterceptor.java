@@ -15,6 +15,7 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
 import querymethods.QueryMethodsHelper;
 import querymethods.util.ExampleUtil;
@@ -55,6 +56,14 @@ public class QueryMethodsInterceptor implements Interceptor {
 					if(key.matches(regex)) {
 						params.add(pm.get(key));
 					}
+				}
+			} else if(parameter instanceof StrictMap) {
+				@SuppressWarnings("unchecked")
+				StrictMap<Object> pm = (StrictMap<Object>)parameter;
+				String[] keys = pm.keySet().toArray(new String[] {});
+				Arrays.sort(keys);
+				for (String key : keys) {
+					params.add(pm.get(key));
 				}
 			} else {
 				params.add(parameter);
