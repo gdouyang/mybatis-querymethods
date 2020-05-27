@@ -69,7 +69,7 @@ public class TkmapperTest {
 			Example.Criteria criteria = example.createCriteria();
 			
 			IfThen de = new IfThen();
-			de.isNotEmptyThen(null, val -> criteria.andEqualTo("id", val));
+			de.notEmptyThen(null, val -> criteria.andEqualTo("id", val));
 			
 //			criteria.andEqualTo("id", 1);
 			Blog blog = mapper.selectOneByExample(example);
