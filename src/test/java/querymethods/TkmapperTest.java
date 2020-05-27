@@ -9,7 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import querymethods.util.DynamicSQL;
+import querymethods.util.IfThen;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.Example;
@@ -68,8 +68,8 @@ public class TkmapperTest {
 			Example example = new Example(Blog.class);
 			Example.Criteria criteria = example.createCriteria();
 			
-			DynamicSQL de = new DynamicSQL();
-			de.isNotEmpty(null, val -> criteria.andEqualTo("id", val));
+			IfThen de = new IfThen();
+			de.isNotEmptyThen(null, val -> criteria.andEqualTo("id", val));
 			
 //			criteria.andEqualTo("id", 1);
 			Blog blog = mapper.selectOneByExample(example);

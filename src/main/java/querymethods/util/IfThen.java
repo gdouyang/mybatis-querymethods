@@ -23,14 +23,14 @@ import tk.mybatis.mapper.util.StringUtil;
  *  Example example = new Example(Blog.class);
  *  Example.Criteria criteria = example.createCriteria();
  *  
- *  DynamicSQL ds = new DynamicSQL();
+ *  IfThen ds = new IfThen();
  *  ds.isNotEmpty(id, val -> criteria.andEqualTo("id", val))
  *    .isNotEmpty(name, val -> criteria.andEqualTo("name", val));
  *  </pre>
  * @author OYGD
  *
  */
-public class DynamicSQL {
+public class IfThen {
 
 	/**
 	 * 当不为null的时候执行Consumer
@@ -38,7 +38,7 @@ public class DynamicSQL {
 	 * @param val
 	 * @return
 	 */
-	public <V> DynamicSQL isNotNull(V value, Consumer<V> val) {
+	public <V> IfThen isNotNullThen(V value, Consumer<V> val) {
 		if (Objects.nonNull(value)) {
 			val.accept(value);
 		}
@@ -51,7 +51,7 @@ public class DynamicSQL {
 	 * @param val
 	 * @return
 	 */
-	public <V> DynamicSQL isNull(V value, Consumer<V> val) {
+	public <V> IfThen isNullThen(V value, Consumer<V> val) {
 		if (Objects.isNull(value)) {
 			val.accept(value);
 		}
@@ -64,7 +64,7 @@ public class DynamicSQL {
 	 * @param val
 	 * @return
 	 */
-	public <V> DynamicSQL isNotEmpty(V value, Consumer<V> val) {
+	public <V> IfThen isNotEmptyThen(V value, Consumer<V> val) {
 		if (!isEmpty(value)) {
 			val.accept(value);
 		}
