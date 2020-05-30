@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import querymethods.util.IfThen;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.Example;
@@ -21,6 +22,15 @@ import tkmapper.BlogMapper1;
  *
  */
 public class TkmapperTest {
+	
+	public static void main(String[] args) {
+		try {
+			new TkmapperTest().test();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public void test() throws IOException {
 		String resource = "mybatis-config.xml";
@@ -57,7 +67,11 @@ public class TkmapperTest {
 			BlogMapper1 mapper = session.getMapper(BlogMapper1.class);
 			Example example = new Example(Blog.class);
 			Example.Criteria criteria = example.createCriteria();
-			criteria.andEqualTo("id", 1);
+			
+			IfThen de = new IfThen();
+			de.notEmptyThen(null, val -> criteria.andEqualTo("id", val));
+			
+//			criteria.andEqualTo("id", 1);
 			Blog blog = mapper.selectOneByExample(example);
 			System.out.println(blog);
 		} finally {
