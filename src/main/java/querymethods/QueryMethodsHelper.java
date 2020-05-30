@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -24,6 +26,8 @@ import querymethods.util.SqlUtil;
  */
 public class QueryMethodsHelper {
 
+	protected final static Log logger = LogFactory.getLog(QueryMethodsHelper.class);
+	
 	private QueryMethodsHelper() {
 	}
 	
@@ -86,6 +90,10 @@ public class QueryMethodsHelper {
 			try {
 				if(queryMethod.containsKey(msId)) {
 					return;
+				}
+				// QueryMethods
+				if(logger.isInfoEnabled()) {
+					logger.info("find query methods => " + msId);
 				}
 				queryMethod.put(msId, Boolean.TRUE);
 
