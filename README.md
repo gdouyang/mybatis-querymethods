@@ -1,7 +1,27 @@
+在使用spring data jpa的时候可以通过方法名来动态的创建查询语句，于是有了想把这个功能移植到mybaits的想法
+
 # 通过方法名来动态生成sql查询
 
 - 通过QueryMethodsHelper来重新生成sqlSource
 - 通过QueryMethodsInterceptor来生成where条件
+
+tkmapper版本
+```
+<dependency>
+    <groupId>tk.mybatis</groupId>
+    <artifactId>mapper</artifactId>
+    <version>4.1.5</version>
+</dependency>
+```
+
+使用方式
+```
+<dependency>
+    <groupId>com.github.gdouyang</groupId>
+    <artifactId>mybatis-querymethods</artifactId>
+    <version>${version}</version>
+</dependency>
+```
 
 spring boot 启动方式
 ```
@@ -20,16 +40,10 @@ public class QuickDuckApplication {
 ```
 spring mvc启动方式
 ```
-@Component
-public class QuerymethodsConfig implements ApplicationListener<ApplicationStartedEvent> {
-
-	@Override
-	public void onApplicationEvent(ApplicationStartedEvent event) {
-		SqlSessionFactory factory = event.getApplicationContext().getBean(SqlSessionFactory.class);
-		QueryMethodsHelper.processConfiguration(factory.getConfiguration());
-		
-	}
-}
+<bean class="querymethods.MapperScannerConfigurer">
+    <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+</bean>
 ```
 
 在Mapper使用`Select`注解，给于空字符串
