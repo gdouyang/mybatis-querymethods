@@ -45,6 +45,24 @@ spring mvc启动方式
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>
 ```
+配置拦截器`mybatis-config.xml`
+```
+ <plugins>
+      <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+      <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
+ </plugins>
+```
+配置拦截器`spring xml`
+```
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   <property name="plugins">
+    <array>
+	<bean class="com.github.pagehelper.PageInterceptor"></bean>
+        <bean class="querymethods.intercepts.QueryMethodsInterceptor"></bean>
+    </array>
+   </property>
+</bean>
+```
 
 在Mapper使用`Select`注解，给于空字符串
 ```
