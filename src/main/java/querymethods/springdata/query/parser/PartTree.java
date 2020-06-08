@@ -280,12 +280,18 @@ public class PartTree implements Iterable<OrPart> {
 		private static final String LIMITING_QUERY_PATTERN = "(First|Top)(\\d*)?";
 		private static final Pattern LIMITED_QUERY_TEMPLATE = Pattern.compile("^(" + QUERY_PATTERN + ")(" + DISTINCT + ")?"
 				+ LIMITING_QUERY_PATTERN + "(\\p{Lu}.*?)??By");
+		
 
 		private final boolean distinct;
 		private final boolean count;
 		private final boolean exists;
 		private final boolean delete;
 		private final Integer maxResults;
+		
+		// 判断是否为查询
+		private static final Pattern QUERY_BY_TEMPLATE = Pattern.compile("^(" + QUERY_PATTERN + ")(\\p{Lu}.*?)??By");
+		// 需要查询的字段 findNameById -> 指定只查询name
+		private final String queryProperty;
 
 		public Subject(String subject) {
 
@@ -294,6 +300,24 @@ public class PartTree implements Iterable<OrPart> {
 			this.exists = matches(subject, EXISTS_BY_TEMPLATE);
 			this.delete = matches(subject, DELETE_BY_TEMPLATE);
 			this.maxResults = returnMaxResultsIfFirstKSubjectOrNull(subject);
+			this.queryProperty = findQueryProperty(subject);
+		}
+		
+		/**
+		 * 获取需要查询的属性
+		 * @param subject
+		 * @return
+		 */
+		private String findQueryProperty(String subject) {
+			if (null == subject) {
+				return null;
+			}
+			if (matches(subject, QUERY_BY_TEMPLATE)) {
+				String property = Pattern.compile("^("+QUERY_PATTERN+")|By$", Pattern.DOTALL).matcher(subject).replaceAll("");
+				if (StringUtils.isEmpty(property)) return null;
+				return StringUtils.uncapitalize(property);
+			}
+			return null;
 		}
 
 		/**
@@ -346,6 +370,10 @@ public class PartTree implements Iterable<OrPart> {
 
 		public Integer getMaxResults() {
 			return maxResults;
+		}
+		// 需要查询的字段
+		public String getQueryProperty() {
+			return queryProperty;
 		}
 
 		private final boolean matches(String subject, Pattern pattern) {
