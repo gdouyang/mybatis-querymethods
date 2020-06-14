@@ -64,9 +64,12 @@ spring mvc启动方式
 </bean>
 ```
 
-在Mapper使用`Select`注解，给于空字符串
+在Mapper使用`Select`注解，给于空字符串， 没有注解的需要在xml文件中配置
 ```
 public interface CustomerMapper extends Mapper<Customer> {
+  Customer selectCustomer(int id);
+
+  void insert1(Customer b);
 
   @Select("")
   Customer findByIdAndFirstName(int id, String name);
@@ -81,19 +84,20 @@ public interface CustomerMapper extends Mapper<Customer> {
   Integer countById(int id);
 
   @Select("")
-  Customer findByFirstNameOrderByIdAsc(String name);
+  List<Customer> findByFirstNameOrderByIdAsc(String name);
 
   @Select("")
-  Customer findByFirstNameStartingWith(String name);
+  List<Customer> findByFirstNameStartingWith(String name);
 
   @Select("")
-  Customer findByIdInOrId(List<Integer> idList, Integer id);
+  List<Customer> findByIdInOrId(List<Integer> idList, Integer id);
 
   @Select("")
   List<Customer> findByIdIn(List<Integer> idList);
 
   @Select("")
   String findFirstNameById(int id);
+
 
 }
 ```
