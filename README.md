@@ -66,25 +66,35 @@ spring mvc启动方式
 
 在Mapper使用`Select`注解，给于空字符串
 ```
-public interface BlogMapper extends Mapper<Blog>
-{	
-	@Select("")
-	Blog findByIdAndFirstName(int id, String name);
-	
-	@Select("")
-	Blog findByIdOrFirstName(int id, String name);
-	
-	@Select("")
-	Blog findById(int id);
-	
-	@Select("")
-	Integer countById(int id);
-	
-	@Select("")
-    Blog findByIdInOrId(List<Integer> idList, Integer id);
-    
-    @Select("")
-    Blog findByIdIn(List<Integer> idList);
+public interface CustomerMapper extends Mapper<Customer> {
+
+  @Select("")
+  Customer findByIdAndFirstName(int id, String name);
+
+  @Select("")
+  Customer findByIdOrFirstName(int id, String name);
+
+  @Select("")
+  Customer findById(int id);
+
+  @Select("")
+  Integer countById(int id);
+
+  @Select("")
+  Customer findByFirstNameOrderByIdAsc(String name);
+
+  @Select("")
+  Customer findByFirstNameStartingWith(String name);
+
+  @Select("")
+  Customer findByIdInOrId(List<Integer> idList, Integer id);
+
+  @Select("")
+  List<Customer> findByIdIn(List<Integer> idList);
+
+  @Select("")
+  String findFirstNameById(int id);
+
 }
 ```
 
@@ -92,11 +102,11 @@ public interface BlogMapper extends Mapper<Blog>
 CREATE DATABASE IF NOT EXISTS querymethods CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 use querymethods;
 
-DROP TABLE IF EXISTS `blog`;
-CREATE TABLE `blog` (
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE `customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(255) DEFAULT NULL,
-  `lastName` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 ```

@@ -1,6 +1,7 @@
 package querymethods;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
@@ -11,43 +12,53 @@ import org.junit.Test;
  *
  */
 public class AutoSqlTest extends BaseTest {
-	@Test
-	public void test() {
-		SqlSession session = sqlSessionFactory.openSession();
+  @Test
+  public void test() {
+    SqlSession session = sqlSessionFactory.openSession();
 
-		try {
-			BlogMapper mapper = session.getMapper(BlogMapper.class);
+    try {
+      CustomerMapper mapper = session.getMapper(CustomerMapper.class);
 
-			Integer id = 1;
-			mapper.deleteByPrimaryKey(id);
-			
-			Blog b = new Blog();
-			b.setId(id);
-			b.setFirstName("OY");
-			b.setLastName("GD");
-			mapper.insert1(b);
+      Integer id = 1;
+      mapper.deleteByPrimaryKey(id);
 
-			Blog blog = mapper.findByIdOrFirstName(id, "OY1");
-			assert blog != null;
+      Customer b = new Customer();
+      b.setId(id);
+      b.setFirstName("OY");
+      b.setLastName("GD");
+      mapper.insert1(b);
+
+      Customer customer = mapper.findByIdOrFirstName(id, "OY1");
+      assert customer != null;
 //
-			Integer countById = mapper.countById(id);
-			assert countById != null;
+      Integer countById = mapper.countById(id);
+      assert countById != null;
 //			
-			blog = mapper.findByIdAndFirstName(b.getId(), b.getFirstName());
-			assert blog != null; 
-			
-			mapper.findByFirstNameOrderByIdAsc(b.getFirstName());
-			
-			mapper.findByFirstNameStartingWith(b.getFirstName());
-			
-			mapper.findByIdInOrId(Arrays.asList(id,2,3), id);
-			
-			mapper.findByIdIn(Arrays.asList(id,2,3));
-			
-		} finally {
-			session.commit();
-			session.close();
-		}
-	}
+      customer = mapper.findByIdAndFirstName(b.getId(), b.getFirstName());
+      assert customer != null;
+
+      customer = mapper.selectCustomer(id);
+      assert customer != null;
+
+      List<Customer> list = mapper.findByFirstNameOrderByIdAsc(b.getFirstName());
+      assert (list != null && list.size() > 0);
+
+      list = mapper.findByFirstNameStartingWith(b.getFirstName());
+      assert (list != null && list.size() > 0);
+
+      list = mapper.findByIdInOrId(Arrays.asList(id, 2, 3), id);
+      assert (list != null && list.size() > 0);
+
+      list = mapper.findByIdIn(Arrays.asList(id, 2, 3));
+      assert (list != null && list.size() > 0);
+
+      String firstName = mapper.findFirstNameById(id);
+      assert firstName != null;
+
+    } finally {
+      session.commit();
+      session.close();
+    }
+  }
 
 }

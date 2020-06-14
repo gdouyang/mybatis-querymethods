@@ -17,14 +17,15 @@
       <dataSource type="POOLED">
         <property name="driver" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/querymethods?useUnicode=true&amp;characterEncoding=UTF-8"/>
+<!--         <property name="url" value="jdbc:mysql://192.168.31.197:3306/querymethods?useUnicode=true&amp;characterEncoding=UTF-8"/> -->
         <property name="username" value="root"/>
         <property name="password" value="root"/>
       </dataSource>
     </environment>
   </environments>
   <mappers>
-    <mapper resource="BlogMapper.xml"/>
-    <mapper resource="BlogMapper1.xml"/>
+    <mapper resource="CustomerMapper.xml"/>
+    <mapper resource="CustomerMapper1.xml"/>
   </mappers>
   
 </configuration>
