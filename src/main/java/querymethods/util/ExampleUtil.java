@@ -37,8 +37,8 @@ public class ExampleUtil {
     String methodName = MsIdUtil.getMethodName(msId);
 
     PartTree tree = PartTreeFactory.create(msId, methodName);
-
     Example example = new Example(entityClass);
+    example.setDistinct(tree.isDistinct());
     if (StringUtil.isNotEmpty(tree.getQueryProperty())) {
       example.selectProperties(tree.getQueryProperty());
     }

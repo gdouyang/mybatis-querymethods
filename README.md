@@ -98,7 +98,14 @@ public interface CustomerMapper extends Mapper<Customer> {
   @Select("")
   String findFirstNameById(int id);
 
+  @Delete("")
+  int deleteById(int id);
 
+  @Delete("")
+  int deleteByFirstName(String name);
+
+  @Delete("")
+  int deleteByFirstNameAndId(String name, int id);
 }
 ```
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
 
 import querymethods.springdata.query.parser.PartTree;
@@ -18,6 +19,8 @@ import tk.mybatis.mapper.util.StringUtil;
 
 /**
  * TkMapper工具类
+ * 
+ * @see tk.mybatis.mapper.provider.ExampleProvider
  * 
  * @author OYGD
  *
@@ -56,6 +59,27 @@ public class TkMapperUtil {
     sql.append(SqlHelper.exampleWhereClause());
     sql.append(SqlHelper.exampleOrderBy(entityClass));
     sql.append(SqlHelper.exampleForUpdate());
+    return sql.toString();
+  }
+
+  /**
+   * 根据Example删除
+   *
+   * @param ms
+   * @return
+   */
+  public static String deleteByExample(MappedStatement ms, Class<?> entityClass) {
+    StringBuilder sql = new StringBuilder();
+    if (SqlHelper.hasLogicDeleteColumn(entityClass)) {
+      sql.append(SqlHelper.updateTable(entityClass, tableName(entityClass)));
+      sql.append("<set>");
+      sql.append(SqlHelper.logicDeleteColumnEqualsValue(entityClass, true));
+      sql.append("</set>");
+      MetaObjectUtil.forObject(ms).setValue("sqlCommandType", SqlCommandType.UPDATE);
+    } else {
+      sql.append(SqlHelper.deleteFromTable(entityClass, tableName(entityClass)));
+    }
+    sql.append(SqlHelper.exampleWhereClause());
     return sql.toString();
   }
 

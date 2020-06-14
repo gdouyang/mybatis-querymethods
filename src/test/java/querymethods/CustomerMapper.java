@@ -3,6 +3,7 @@ package querymethods;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import tk.mybatis.mapper.common.Mapper;
@@ -45,5 +46,13 @@ public interface CustomerMapper extends Mapper<Customer> {
   @Select("")
   String findFirstNameById(int id);
 
+  @Delete("")
+  int deleteById(int id);
+
+  @Delete("")
+  int deleteByFirstName(String name);
+
+  @Delete("")
+  int deleteByFirstNameAndId(String name, int id);
 
 }

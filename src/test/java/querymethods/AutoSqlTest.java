@@ -1,5 +1,7 @@
 package querymethods;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +56,9 @@ public class AutoSqlTest extends BaseTest {
 
       String firstName = mapper.findFirstNameById(id);
       assert firstName != null;
+
+      int num = mapper.deleteByFirstNameAndId(b.getFirstName(), id);
+      assertEquals(1, num);
 
     } finally {
       session.commit();

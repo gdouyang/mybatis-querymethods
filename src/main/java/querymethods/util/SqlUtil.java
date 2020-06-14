@@ -32,6 +32,8 @@ public class SqlUtil {
 
       if (tree.isCountProjection()) {
         xmlSql = TkMapperUtil.selectCountByExample(entityClass);
+      } else if (tree.isDelete()) {
+        xmlSql = TkMapperUtil.deleteByExample(ms, entityClass);
       } else {
         xmlSql = TkMapperUtil.selectByExample(ms, entityClass, tree);
       }
