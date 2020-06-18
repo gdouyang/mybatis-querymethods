@@ -27,62 +27,76 @@ import tk.mybatis.mapper.entity.Example;
  * @author OYGD
  *
  */
-@Intercepts({ @Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class }) })
+@Intercepts({
+    @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
+        RowBounds.class, ResultHandler.class}),
+    @Signature(type = Executor.class, method = "update", args = {MappedStatement.class,
+        Object.class})})
 public class QueryMethodsInterceptor implements Interceptor {
-	
-	/**
-	 * 
-	 */
-	@Override
-	public Object intercept(Invocation invocation) throws Throwable {
-		Executor executor = (Executor) invocation.getTarget();
-		Object[] args = invocation.getArgs();
-		MappedStatement ms = (MappedStatement)args[0];
-		Object parameter = args[1];
-		RowBounds rbs = (RowBounds)args[2];
-		ResultHandler<?> rh = (ResultHandler<?>)args[3];
-		
-		String msId = ms.getId();
-		if(QueryMethodsHelper.isQueryMethods(msId)) {
-			Queue<Object> params = new LinkedList<>();
-			if(parameter instanceof ParamMap) {
-				@SuppressWarnings("unchecked")
-				ParamMap<Object> pm = (ParamMap<Object>)parameter;
-				
-				String regex = "^param(\\d)+$";
-				String[] keys = pm.keySet().toArray(new String[] {});
-				Arrays.sort(keys);
-				for (String key : keys) {
-					if(key.matches(regex)) {
-						params.add(pm.get(key));
-					}
-				}
-			} else if(parameter instanceof StrictMap) {
-				@SuppressWarnings("unchecked")
-				StrictMap<Object> pm = (StrictMap<Object>)parameter;
-				String[] keys = pm.keySet().toArray(new String[] {});
-				Arrays.sort(keys);
-				for (String key : keys) {
-					params.add(pm.get(key));
-				}
-			} else {
-				params.add(parameter);
-			}
-			Example example = ExampleUtil.getExampleByMsId(msId, params);
-			
-			return invocation.getMethod().invoke(executor, ms, example, rbs, rh);
-		}
-        return invocation.proceed();
-	}
 
-	@Override
-	public Object plugin(Object target) {
-		return Plugin.wrap(target, this);
-	}
+  /**
+   * 
+   */
+  @Override
+  public Object intercept(Invocation invocation) throws Throwable {
+    Executor executor = (Executor) invocation.getTarget();
+    Object[] args = invocation.getArgs();
+    MappedStatement ms = (MappedStatement) args[0];
 
-	@Override
-	public void setProperties(Properties properties) {
+    String msId = ms.getId();
+    if (QueryMethodsHelper.isQueryMethods(msId)) {
+      Object parameter = args[1];
+      RowBounds rbs = (RowBounds) args[2];
+      ResultHandler<?> rh = (ResultHandler<?>) args[3];
 
-	}
-	
+      Example example = getExample(msId, parameter);
+
+      return invocation.getMethod().invoke(executor, ms, example, rbs, rh);
+    } else if (QueryMethodsHelper.isDeleteMethods(msId)) {
+      Object parameter = args[1];
+      Example example = getExample(msId, parameter);
+      return invocation.getMethod().invoke(executor, ms, example);
+    }
+    return invocation.proceed();
+  }
+
+  private Example getExample(String msId, Object parameter) throws ClassNotFoundException {
+    Queue<Object> params = new LinkedList<>();
+    if (parameter instanceof ParamMap) {
+      @SuppressWarnings("unchecked")
+      ParamMap<Object> pm = (ParamMap<Object>) parameter;
+
+      String regex = "^param(\\d)+$";
+      String[] keys = pm.keySet().toArray(new String[] {});
+      Arrays.sort(keys);
+      for (String key : keys) {
+        if (key.matches(regex)) {
+          params.add(pm.get(key));
+        }
+      }
+    } else if (parameter instanceof StrictMap) {
+      @SuppressWarnings("unchecked")
+      StrictMap<Object> pm = (StrictMap<Object>) parameter;
+      String[] keys = pm.keySet().toArray(new String[] {});
+      Arrays.sort(keys);
+      for (String key : keys) {
+        params.add(pm.get(key));
+      }
+    } else {
+      params.add(parameter);
+    }
+    Example example = ExampleUtil.getExampleByMsId(msId, params);
+    return example;
+  }
+
+  @Override
+  public Object plugin(Object target) {
+    return Plugin.wrap(target, this);
+  }
+
+  @Override
+  public void setProperties(Properties properties) {
+
+  }
+
 }

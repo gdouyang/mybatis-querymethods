@@ -166,6 +166,10 @@ public class PartTree implements Iterable<OrPart> {
 	public Integer getMaxResults() {
 		return subject.getMaxResults();
 	}
+	
+	public String getQueryProperty() {
+	    return subject.getQueryProperty();
+	}
 
 	/**
 	 * Returns an {@link Iterable} of all parts contained in the {@link PartTree}.

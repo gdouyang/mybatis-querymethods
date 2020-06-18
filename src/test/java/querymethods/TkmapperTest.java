@@ -14,7 +14,7 @@ import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
-import tkmapper.BlogMapper1;
+import tkmapper.CustomerMapper1;
 
 /**
  * 
@@ -64,15 +64,15 @@ public class TkmapperTest {
 		mapperHelper.processConfiguration(session.getConfiguration());
 		try {
 //			EntityHelper.initEntityNameMap(Blog.class, mapperHelper.getConfig());
-			BlogMapper1 mapper = session.getMapper(BlogMapper1.class);
-			Example example = new Example(Blog.class);
+			CustomerMapper1 mapper = session.getMapper(CustomerMapper1.class);
+			Example example = new Example(Customer.class);
 			Example.Criteria criteria = example.createCriteria();
 			
 			IfThen de = new IfThen();
 			de.notEmptyThen(null, val -> criteria.andEqualTo("id", val));
 			
 //			criteria.andEqualTo("id", 1);
-			Blog blog = mapper.selectOneByExample(example);
+			Customer blog = mapper.selectOneByExample(example);
 			System.out.println(blog);
 		} finally {
 			session.commit();

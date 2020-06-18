@@ -1,7 +1,7 @@
 package tkmapper;
 
 
-import querymethods.Blog;
+import querymethods.Customer;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import tk.mybatis.mapper.common.Mapper;
  * @author OYGD
  *
  */
-public interface BlogMapper1 extends Mapper<Blog> {
+public interface CustomerMapper1 extends Mapper<Customer> {
 }
