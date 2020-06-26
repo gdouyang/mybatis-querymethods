@@ -119,7 +119,7 @@ public class QueryMethodsHelper {
         MetaObject msObject = SystemMetaObject.forObject(ms);
         msObject.setValue("sqlSource", s);
 
-      } catch (ClassNotFoundException e) {
+      } catch (ClassNotFoundException | NoSuchFieldException e) {
         throw new RuntimeException(e);
       }
     }
