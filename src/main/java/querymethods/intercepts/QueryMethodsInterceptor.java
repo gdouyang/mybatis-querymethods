@@ -18,7 +18,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
 import querymethods.QueryMethodsHelper;
-import querymethods.util.ExampleUtil;
+import querymethods.tkmapper.ExampleUtil;
 import tk.mybatis.mapper.entity.Example;
 
 /**

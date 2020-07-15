@@ -1,4 +1,4 @@
-package querymethods.util;
+package querymethods.tkmapper;
 
 import java.util.Queue;
 
@@ -10,6 +10,7 @@ import querymethods.springdata.query.domain.Sort;
 import querymethods.springdata.query.parser.Part;
 import querymethods.springdata.query.parser.PartTree;
 import querymethods.springdata.query.parser.PartTree.OrPart;
+import querymethods.util.MsIdUtil;
 import tk.mybatis.mapper.MapperException;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.OrderBy;

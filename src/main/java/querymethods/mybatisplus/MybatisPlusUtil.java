@@ -1,16 +1,26 @@
 package querymethods.mybatisplus;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.ibatis.mapping.MappedStatement;
 
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 
+import querymethods.springdata.mapping.PropertyPath;
+import querymethods.springdata.query.domain.Sort;
+import querymethods.springdata.query.parser.Part;
 import querymethods.springdata.query.parser.PartTree;
+import querymethods.springdata.query.parser.PartTree.OrPart;
 
 public class MybatisPlusUtil {
-  public static void getTableInfo(Class<?> clazz) {
+
+  public static TableInfo getTableInfo(Class<?> clazz) {
     TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
-    System.out.println(tableInfo.getKeyColumn());
+    return tableInfo;
   }
 
   public static String selectCountByExample(Class<?> entityClass) {
@@ -56,5 +66,40 @@ public class MybatisPlusUtil {
    */
   public static boolean isEmpty(String str) {
     return str == null || str.length() == 0;
+  }
+
+  /**
+   * 检查property是否在entityClass中
+   * 
+   * @param entityClass
+   * @param tree
+   * @throws NoSuchFieldException 当property不存在entityClass中时
+   */
+  public static void checkProperty(String msId, Class<?> entityClass, PartTree tree)
+      throws NoSuchFieldException {
+    TableInfo tableInfo = getTableInfo(entityClass);
+    List<TableFieldInfo> fieldList = tableInfo.getFieldList();
+    Set<String> propertys =
+        fieldList.stream().map(TableFieldInfo::getProperty).collect(Collectors.toSet());
+    propertys.add(tableInfo.getKeyProperty());
+
+    for (OrPart node : tree) {
+      for (Part part : node) {
+        PropertyPath property = part.getProperty();
+        String segment = property.getSegment();
+        if (!propertys.contains(segment)) {
+          throw new NoSuchFieldException(String.format("%s -> %s", segment, msId));
+        }
+      }
+    }
+    Sort sort = tree.getSort();
+    if (sort != null) {
+      for (Sort.Order order : sort) {
+        String property = order.getProperty();
+        if (!propertys.contains(property)) {
+          throw new NoSuchFieldException(String.format("%s -> %s", property, msId));
+        }
+      }
+    }
   }
 }

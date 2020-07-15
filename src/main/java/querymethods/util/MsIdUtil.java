@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tk.mybatis.mapper.common.Mapper;
-
 /**
  * msId工具类，通过msId获取MapperClass, methodName, entityClass
  * 
@@ -17,99 +15,106 @@ import tk.mybatis.mapper.common.Mapper;
  */
 public class MsIdUtil {
 
-	private MsIdUtil() {
-	}
+  private MsIdUtil() {}
 
-	private static Map<String, String> cacheMethodName = new HashMap<>();
-	private static Map<String, Class<?>> cacheMapperClass = new HashMap<>();
-	private static Map<String, Class<?>> cacheEntityClass = new HashMap<>();
+  private static Map<String, String> cacheMethodName = new HashMap<>();
+  private static Map<String, Class<?>> cacheMapperClass = new HashMap<>();
+  private static Map<String, Class<?>> cacheEntityClass = new HashMap<>();
 
-	/**
-	 * 根据msId来获取对应的方法名
-	 * 
-	 * @param msId
-	 * @return
-	 */
-	public static String getMethodName(String msId) {
-		return cacheMethodName.getOrDefault(msId, _getMethodName(msId));
-	}
+  /**
+   * 根据msId来获取对应的方法名
+   * 
+   * @param msId
+   * @return
+   */
+  public static String getMethodName(String msId) {
+    return cacheMethodName.getOrDefault(msId, _getMethodName(msId));
+  }
 
-	private static String _getMethodName(String msId) {
-		int lastIndexOf = msId.lastIndexOf(".");
-		String methodName = msId.substring(lastIndexOf + 1);
-		cacheMethodName.put(msId, methodName);
-		return methodName;
-	}
+  private static String _getMethodName(String msId) {
+    int lastIndexOf = msId.lastIndexOf(".");
+    String methodName = msId.substring(lastIndexOf + 1);
+    cacheMethodName.put(msId, methodName);
+    return methodName;
+  }
 
-	/**
-	 * 通过msId来获取对应的MapperClass
-	 * 
-	 * @param msId
-	 * @return
-	 */
-	public static Class<?> getMapperClass(String msId) {
-		return cacheMapperClass.getOrDefault(msId, _getMapperClass(msId));
-	}
+  /**
+   * 通过msId来获取对应的MapperClass
+   * 
+   * @param msId
+   * @return
+   */
+  public static Class<?> getMapperClass(String msId) {
+    return cacheMapperClass.getOrDefault(msId, _getMapperClass(msId));
+  }
 
-	private static Class<?> _getMapperClass(String msId) {
-		int lastIndexOf = msId.lastIndexOf(".");
-		String mapperName = msId.substring(0, lastIndexOf);
+  private static Class<?> _getMapperClass(String msId) {
+    int lastIndexOf = msId.lastIndexOf(".");
+    String mapperName = msId.substring(0, lastIndexOf);
 
-		try {
-			Class<?> mapperClass = Class.forName(mapperName);
+    try {
+      Class<?> mapperClass = Class.forName(mapperName);
 
-			cacheMapperClass.put(msId, mapperClass);
-			return mapperClass;
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
+      cacheMapperClass.put(msId, mapperClass);
+      return mapperClass;
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-	/**
-	 * 通过msId来获取对应的EntityClass
-	 * 
-	 * @param msId
-	 * @return
-	 */
-	public static Class<?> getEntityClass(String msId) {
-		return cacheEntityClass.getOrDefault(msId, _getEntityClass(msId));
-	}
+  /**
+   * 通过msId来获取对应的EntityClass
+   * 
+   * @param msId
+   * @return
+   */
+  public static Class<?> getEntityClass(String msId) {
+    return cacheEntityClass.getOrDefault(msId, _getEntityClass(msId));
+  }
 
-	private static Class<?> _getEntityClass(String msId) {
-		Class<?> entityClass = getEntityClass(getMapperClass(msId));
-		cacheEntityClass.put(msId, entityClass);
-		return entityClass;
-	}
+  private static Class<?> _getEntityClass(String msId) {
+    Class<?> entityClass = getEntityClass(getMapperClass(msId));
+    cacheEntityClass.put(msId, entityClass);
+    return entityClass;
+  }
 
-	public static List<Class<?>> mapperClasss = new ArrayList<>();
+  public static List<Class<?>> mapperClasss = new ArrayList<>();
 
-	static {
-		mapperClasss.add(Mapper.class);
-	}
+  static {
+    Class<?> clazz = ORMUtil.getTkMapperBaseMapperClass();
+    if (clazz != null) {
+      mapperClasss.add(clazz);
+    } else {
+      clazz = ORMUtil.getMybatisPlusBaseMapperClass();
+      if (clazz != null) {
+        mapperClasss.add(clazz);
+      }
+    }
+  }
 
-	/**
-	 * 根据MapperClass获取的EntityClass
-	 * 
-	 * @param mapperClass
-	 * @return
-	 */
-	public static Class<?> getEntityClass(Class<?> mapperClass) {
-		Class<?> entityClass = null;
-		Type[] genericInterfaces = mapperClass.getGenericInterfaces();
-		if (genericInterfaces != null && genericInterfaces.length > 0) {
-			for (Type type1 : genericInterfaces) {
-				ParameterizedType t = ((ParameterizedType) type1);
-				if (mapperClasss.contains(t.getRawType())) {
-					try {
-						entityClass = Class.forName(t.getActualTypeArguments()[0].getTypeName());
-					} catch (ClassNotFoundException e) {
-						throw new RuntimeException(e);
-					}
-					break;
-				}
-			}
-		}
-		return entityClass;
-	}
+  /**
+   * 根据MapperClass获取的EntityClass
+   * 
+   * @param mapperClass
+   * @return
+   */
+  public static Class<?> getEntityClass(Class<?> mapperClass) {
+    Class<?> entityClass = null;
+    Type[] genericInterfaces = mapperClass.getGenericInterfaces();
+    if (genericInterfaces != null && genericInterfaces.length > 0) {
+      for (Type type1 : genericInterfaces) {
+        ParameterizedType t = ((ParameterizedType) type1);
+        if (mapperClasss.contains(t.getRawType())) {
+          try {
+            entityClass = Class.forName(t.getActualTypeArguments()[0].getTypeName());
+          } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+          }
+          break;
+        }
+      }
+    }
+    return entityClass;
+  }
 
 }

@@ -1,4 +1,4 @@
-package querymethods.util;
+package querymethods.tkmapper;
 
 import java.util.Queue;
 
