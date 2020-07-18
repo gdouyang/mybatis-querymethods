@@ -17,9 +17,11 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
+import querymethods.QueryMethodsException;
 import querymethods.QueryMethodsHelper;
+import querymethods.mybatisplus.MybatisPlusWhereBuilder;
 import querymethods.tkmapper.ExampleUtil;
-import tk.mybatis.mapper.entity.Example;
+import querymethods.util.ORMUtil;
 
 /**
  * 查询方法拦截器
@@ -49,18 +51,18 @@ public class QueryMethodsInterceptor implements Interceptor {
       RowBounds rbs = (RowBounds) args[2];
       ResultHandler<?> rh = (ResultHandler<?>) args[3];
 
-      Example example = getExample(msId, parameter);
+      Object example = getExample(msId, parameter);
 
       return invocation.getMethod().invoke(executor, ms, example, rbs, rh);
     } else if (QueryMethodsHelper.isDeleteMethods(msId)) {
       Object parameter = args[1];
-      Example example = getExample(msId, parameter);
+      Object example = getExample(msId, parameter);
       return invocation.getMethod().invoke(executor, ms, example);
     }
     return invocation.proceed();
   }
 
-  private Example getExample(String msId, Object parameter) throws ClassNotFoundException {
+  private Object getExample(String msId, Object parameter) throws ClassNotFoundException {
     Queue<Object> params = new LinkedList<>();
     if (parameter instanceof ParamMap) {
       @SuppressWarnings("unchecked")
@@ -85,8 +87,15 @@ public class QueryMethodsInterceptor implements Interceptor {
     } else {
       params.add(parameter);
     }
-    Example example = ExampleUtil.getExampleByMsId(msId, params);
-    return example;
+    if (ORMUtil.isTkMapper()) {
+      Object example = ExampleUtil.getExampleByMsId(msId, params);
+      return example;
+    } else if (ORMUtil.isMybatisPlus()) {
+      Object example = MybatisPlusWhereBuilder.getExampleByMsId(msId, params);
+      return example;
+    }
+
+    throw new QueryMethodsException("no orm find tkmapper or mybatis-plus");
   }
 
   @Override

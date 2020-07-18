@@ -47,7 +47,7 @@ public class MybatisPlusUtil {
     TableInfo tableInfo = getTableInfo(entityClass);
     if (isEmpty(tree.getQueryProperty())) {
       // 将返回值修改为实体类型
-      // tk.mybatis.mapper.provider.ExampleProvider#selectByExample
+      ResultMapUtil.setResultType(ms, tableInfo);
     }
 
     SqlMethod sqlMethod = SqlMethod.SELECT_MAPS;

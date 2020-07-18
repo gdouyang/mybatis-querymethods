@@ -16,12 +16,12 @@ import querymethods.springdata.query.domain.Sort;
 import querymethods.springdata.query.parser.Part;
 import querymethods.springdata.query.parser.PartTree;
 import querymethods.springdata.query.parser.PartTree.OrPart;
+import querymethods.util.MetaObjectUtil;
 import tk.mybatis.mapper.entity.EntityColumn;
 import tk.mybatis.mapper.entity.EntityTable;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
 import tk.mybatis.mapper.mapperhelper.MapperTemplate;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
-import tk.mybatis.mapper.util.MetaObjectUtil;
 import tk.mybatis.mapper.util.StringUtil;
 
 /**
