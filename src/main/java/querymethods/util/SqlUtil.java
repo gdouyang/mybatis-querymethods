@@ -38,7 +38,7 @@ public class SqlUtil {
       } else if (ORMUtil.isMybatisPlus()) {
         xmlSql = mybatisPlus(ms, msId, entityClass, tree);
       }
-      return "<script>\n\t" + xmlSql + "</script>";
+      return xmlSql;
     }
     return null;
   }
@@ -54,7 +54,7 @@ public class SqlUtil {
     } else {
       xmlSql = TkMapperUtil.selectByExample(ms, entityClass, tree);
     }
-    return xmlSql;
+    return "<script>\n\t" + xmlSql + "</script>";
   }
 
   private static String mybatisPlus(MappedStatement ms, String msId, Class<?> entityClass,

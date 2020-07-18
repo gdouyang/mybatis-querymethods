@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.ibatis.mapping.MappedStatement;
 
+import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
@@ -18,16 +19,22 @@ import querymethods.springdata.query.parser.PartTree.OrPart;
 
 public class MybatisPlusUtil {
 
+
   public static TableInfo getTableInfo(Class<?> clazz) {
     TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
     return tableInfo;
   }
 
+  private static AbstractMethodImpl u = new AbstractMethodImpl();
+
   public static String selectCountByExample(Class<?> entityClass) {
-    // TODO
-    StringBuilder sql = new StringBuilder();
+    TableInfo tableInfo = getTableInfo(entityClass);
+    SqlMethod sqlMethod = SqlMethod.SELECT_COUNT;
+    String sql = String.format(sqlMethod.getSql(), u.sqlFirst(), u.sqlCount(),
+        tableInfo.getTableName(), u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
     return sql.toString();
   }
+
 
   /**
    * 根据Example查询
@@ -37,12 +44,17 @@ public class MybatisPlusUtil {
    */
   public static String selectByExample(MappedStatement ms, Class<?> entityClass, PartTree tree) {
     // TODO
+    TableInfo tableInfo = getTableInfo(entityClass);
     if (isEmpty(tree.getQueryProperty())) {
       // 将返回值修改为实体类型
       // tk.mybatis.mapper.provider.ExampleProvider#selectByExample
     }
 
-    StringBuilder sql = new StringBuilder("SELECT ");
+    SqlMethod sqlMethod = SqlMethod.SELECT_MAPS;
+    String sql =
+        String.format(sqlMethod.getSql(), u.sqlFirst(), u.sqlSelectColumns(tableInfo, true),
+            tableInfo.getTableName(), u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
+
     return sql.toString();
   }
 
@@ -54,8 +66,18 @@ public class MybatisPlusUtil {
    */
   public static String deleteByExample(MappedStatement ms, Class<?> entityClass) {
     // TODO
-    StringBuilder sql = new StringBuilder();
-    return sql.toString();
+    TableInfo tableInfo = getTableInfo(entityClass);
+    String sql;
+    SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE;
+    if (tableInfo.isLogicDelete()) {
+      sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), u.sqlLogicSet(tableInfo),
+          u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
+    } else {
+      sqlMethod = SqlMethod.DELETE;
+      sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(),
+          u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
+    }
+    return sql;
   }
 
   /**
@@ -102,4 +124,5 @@ public class MybatisPlusUtil {
       }
     }
   }
+
 }
