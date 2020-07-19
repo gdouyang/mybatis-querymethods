@@ -1,33 +1,42 @@
-package querymethods;
+package tkmapper;
+
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.Before;
 
+import querymethods.Customer;
+import querymethods.util.IfThen;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Config;
+import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
-public class BaseTest {
-
-	public BaseTest() {
-	}
+/**
+ * 
+ * @author OYGD
+ *
+ */
+public class TkmapperTest {
 	
-	SqlSessionFactory sqlSessionFactory = null;
-	@Before
-	public void before() {
-		
-		String resource = "mybatis-config.xml";
+	public static void main(String[] args) {
 		try {
-			InputStream inputStream = Resources.getResourceAsStream(resource);
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			new TkmapperTest().test();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void test() throws IOException {
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = Resources.getResourceAsStream(resource);
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		SqlSession session = sqlSessionFactory.openSession();
 		
 		//创建一个MapperHelper
 		MapperHelper mapperHelper = new MapperHelper();
@@ -52,9 +61,22 @@ public class BaseTest {
 		//注册通用接口，和其他集成方式中的 mappers 参数作用相同
 		//4.0 之后的版本，如果类似 Mapper.class 这样的基础接口带有 @RegisterMapper 注解，就不必在这里注册
 		mapperHelper.registerMapper(Mapper.class);
-		mapperHelper.processConfiguration(sqlSessionFactory.getConfiguration());
-		QueryMethodsHelper.processConfiguration(sqlSessionFactory.getConfiguration());
-		
+		mapperHelper.processConfiguration(session.getConfiguration());
+		try {
+//			EntityHelper.initEntityNameMap(Blog.class, mapperHelper.getConfig());
+			CustomerMapper1 mapper = session.getMapper(CustomerMapper1.class);
+			Example example = new Example(Customer.class);
+			Example.Criteria criteria = example.createCriteria();
+			
+			IfThen de = new IfThen();
+			de.notEmptyThen(null, val -> criteria.andEqualTo("id", val));
+			
+//			criteria.andEqualTo("id", 1);
+			Customer blog = mapper.selectOneByExample(example);
+			System.out.println(blog);
+		} finally {
+			session.commit();
+			session.close();
+		}
 	}
-
 }

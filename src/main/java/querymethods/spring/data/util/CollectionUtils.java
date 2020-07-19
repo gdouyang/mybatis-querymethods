@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package querymethods.springdata.util;
+package querymethods.spring.data.util;
 
 import java.util.Collection;
 import java.util.Map;

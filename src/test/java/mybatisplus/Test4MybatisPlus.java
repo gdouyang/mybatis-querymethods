@@ -1,4 +1,4 @@
-package querymethods;
+package mybatisplus;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,38 +8,43 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
+import querymethods.Customer;
+
 /**
  * 
  * @author OYGD
  *
  */
-public class AutoSqlTest extends BaseTest {
+public class Test4MybatisPlus extends BaseTest {
   @Test
   public void test() {
     SqlSession session = sqlSessionFactory.openSession();
 
     try {
-      CustomerMapper mapper = session.getMapper(CustomerMapper.class);
+      CustomerMapperMp mapper = session.getMapper(CustomerMapperMp.class);
 
       Integer id = 1;
-      mapper.deleteByPrimaryKey(id);
+      mapper.deleteById(id);
 
       Customer b = new Customer();
       b.setId(id);
       b.setFirstName("OY");
       b.setLastName("GD");
-      mapper.insert1(b);
+      mapper.insert(b);
 
-      Customer customer = mapper.findByIdOrFirstName(id, "OY1");
+      Integer countById = mapper.countById(null);
+      assert countById == 0;
+
+      Customer customer = mapper.findByIdOrFirstName(null, "OY1");
+      assert customer == null;
+
+      customer = mapper.findByIdOrFirstName(id, "OY1");
       assert customer != null;
 //
-      Integer countById = mapper.countById(id);
+      countById = mapper.countById(id);
       assert countById != null;
 //			
       customer = mapper.findByIdAndFirstName(b.getId(), b.getFirstName());
-      assert customer != null;
-
-      customer = mapper.selectCustomer(id);
       assert customer != null;
 
       List<Customer> list = mapper.findByFirstNameOrderByIdAsc(b.getFirstName());
@@ -55,6 +60,9 @@ public class AutoSqlTest extends BaseTest {
       assert (list != null && list.size() > 0);
 
       String firstName = mapper.findFirstNameById(id);
+      assert firstName != null;
+
+      firstName = mapper.findDistinctFirstNameById(id);
       assert firstName != null;
 
       int num = mapper.deleteByFirstNameAndId(b.getFirstName(), id);

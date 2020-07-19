@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package querymethods.springdata.mapping;
+package querymethods.spring.data.mapping;
 
 import java.beans.Introspector;
 import java.util.ArrayList;
@@ -24,9 +24,9 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import querymethods.springdata.util.Assert;
-import querymethods.springdata.util.ObjectUtils;
-import querymethods.springdata.util.StringUtils;
+import querymethods.spring.data.util.Assert;
+import querymethods.spring.data.util.ObjectUtils;
+import querymethods.spring.data.util.StringUtils;
 
 /**
  * Abstraction of a {@link PropertyPath} of a domain class.

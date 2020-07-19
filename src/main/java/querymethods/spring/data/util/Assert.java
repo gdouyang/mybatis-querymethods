@@ -1,4 +1,4 @@
-package querymethods.springdata.util;
+package querymethods.spring.data.util;
 
 public abstract class Assert {
 

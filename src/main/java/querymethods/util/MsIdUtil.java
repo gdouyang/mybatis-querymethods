@@ -2,10 +2,10 @@ package querymethods.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import querymethods.QueryMethodsConfig;
 
 /**
  * msId工具类，通过msId获取MapperClass, methodName, entityClass
@@ -78,20 +78,6 @@ public class MsIdUtil {
     return entityClass;
   }
 
-  public static List<Class<?>> mapperClasss = new ArrayList<>();
-
-  static {
-    Class<?> clazz = ORMUtil.getTkMapperBaseMapperClass();
-    if (clazz != null) {
-      mapperClasss.add(clazz);
-    } else {
-      clazz = ORMUtil.getMybatisPlusBaseMapperClass();
-      if (clazz != null) {
-        mapperClasss.add(clazz);
-      }
-    }
-  }
-
   /**
    * 根据MapperClass获取的EntityClass
    * 
@@ -104,7 +90,7 @@ public class MsIdUtil {
     if (genericInterfaces != null && genericInterfaces.length > 0) {
       for (Type type1 : genericInterfaces) {
         ParameterizedType t = ((ParameterizedType) type1);
-        if (mapperClasss.contains(t.getRawType())) {
+        if (QueryMethodsConfig.getMapperClasss().contains(t.getRawType())) {
           try {
             entityClass = Class.forName(t.getActualTypeArguments()[0].getTypeName());
           } catch (ClassNotFoundException e) {

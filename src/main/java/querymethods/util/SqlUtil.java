@@ -2,9 +2,10 @@ package querymethods.util;
 
 import org.apache.ibatis.mapping.MappedStatement;
 
+import querymethods.QueryMethodsConfig;
 import querymethods.mybatisplus.MybatisPlusUtil;
-import querymethods.springdata.PartTreeFactory;
-import querymethods.springdata.query.parser.PartTree;
+import querymethods.spring.data.PartTreeFactory;
+import querymethods.spring.data.query.parser.PartTree;
 import querymethods.tkmapper.TkMapperUtil;
 
 /**
@@ -33,9 +34,9 @@ public class SqlUtil {
       String methodName = MsIdUtil.getMethodName(msId);
       PartTree tree = PartTreeFactory.create(msId, methodName);
       String xmlSql = null;
-      if (ORMUtil.isTkMapper()) {
+      if (QueryMethodsConfig.isTkMapper()) {
         xmlSql = tkMapper(ms, msId, entityClass, tree);
-      } else if (ORMUtil.isMybatisPlus()) {
+      } else if (QueryMethodsConfig.isMybatisPlus()) {
         xmlSql = mybatisPlus(ms, msId, entityClass, tree);
       }
       return xmlSql;

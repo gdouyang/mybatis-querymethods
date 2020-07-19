@@ -23,9 +23,9 @@
       </dataSource>
     </environment>
   </environments>
+  
   <mappers>
-    <mapper resource="tkmapper/CustomerMapper.xml"/>
-    <mapper resource="tkmapper/CustomerMapper1.xml"/>
+  <mapper resource="mybatisplus/CustomerMapperMp.xml"/>
   </mappers>
   
 </configuration>

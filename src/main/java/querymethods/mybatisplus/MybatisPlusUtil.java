@@ -1,6 +1,8 @@
 package querymethods.mybatisplus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -10,18 +12,27 @@ import com.baomidou.mybatisplus.core.enums.SqlMethod;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 
-import querymethods.springdata.mapping.PropertyPath;
-import querymethods.springdata.query.domain.Sort;
-import querymethods.springdata.query.parser.Part;
-import querymethods.springdata.query.parser.PartTree;
-import querymethods.springdata.query.parser.PartTree.OrPart;
+import querymethods.spring.data.mapping.PropertyPath;
+import querymethods.spring.data.query.domain.Sort;
+import querymethods.spring.data.query.parser.Part;
+import querymethods.spring.data.query.parser.PartTree;
+import querymethods.spring.data.query.parser.PartTree.OrPart;
 
 public class MybatisPlusUtil {
 
+  public static Map<Class<?>, MPTableInfo> map = new HashMap<>();
 
-  public static TableInfo getTableInfo(Class<?> clazz) {
-    TableInfo tableInfo = TableInfoHelper.getTableInfo(clazz);
+  public static MPTableInfo getMPTableInfo(Class<?> entityClass) {
+    return map.get(entityClass);
+  }
+
+  public static TableInfo getTableInfo(Class<?> entityClass) {
+    TableInfo tableInfo = TableInfoHelper.getTableInfo(entityClass);
+    if (null != tableInfo && !map.containsKey(entityClass)) {
+      map.put(entityClass, new MPTableInfo(tableInfo));
+    }
     return tableInfo;
   }
 
@@ -43,9 +54,8 @@ public class MybatisPlusUtil {
    * @return
    */
   public static String selectByExample(MappedStatement ms, Class<?> entityClass, PartTree tree) {
-    // TODO
     TableInfo tableInfo = getTableInfo(entityClass);
-    if (isEmpty(tree.getQueryProperty())) {
+    if (StringUtils.isBlank(tree.getQueryProperty())) {
       // 将返回值修改为实体类型
       ResultMapUtil.setResultType(ms, tableInfo);
     }
@@ -65,7 +75,6 @@ public class MybatisPlusUtil {
    * @return
    */
   public static String deleteByExample(MappedStatement ms, Class<?> entityClass) {
-    // TODO
     TableInfo tableInfo = getTableInfo(entityClass);
     String sql;
     SqlMethod sqlMethod = SqlMethod.LOGIC_DELETE;
@@ -78,16 +87,6 @@ public class MybatisPlusUtil {
           u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
     }
     return sql;
-  }
-
-  /**
-   * 空
-   *
-   * @param str
-   * @return
-   */
-  public static boolean isEmpty(String str) {
-    return str == null || str.length() == 0;
   }
 
   /**

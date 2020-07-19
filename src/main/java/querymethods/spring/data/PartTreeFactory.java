@@ -1,9 +1,9 @@
-package querymethods.springdata;
+package querymethods.spring.data;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import querymethods.springdata.query.parser.PartTree;
+import querymethods.spring.data.query.parser.PartTree;
 
 /**
  * PartTree工厂类，创建PartTree并缓存

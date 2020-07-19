@@ -11,11 +11,11 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.reflection.MetaObject;
 
-import querymethods.springdata.mapping.PropertyPath;
-import querymethods.springdata.query.domain.Sort;
-import querymethods.springdata.query.parser.Part;
-import querymethods.springdata.query.parser.PartTree;
-import querymethods.springdata.query.parser.PartTree.OrPart;
+import querymethods.spring.data.mapping.PropertyPath;
+import querymethods.spring.data.query.domain.Sort;
+import querymethods.spring.data.query.parser.Part;
+import querymethods.spring.data.query.parser.PartTree;
+import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.util.MetaObjectUtil;
 import tk.mybatis.mapper.entity.EntityColumn;
 import tk.mybatis.mapper.entity.EntityTable;

@@ -1,4 +1,4 @@
-package querymethods;
+package tkmapper;
 
 
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
+import querymethods.Customer;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -20,16 +21,16 @@ public interface CustomerMapper extends Mapper<Customer> {
   void insert1(Customer b);
 
   @Select("")
-  Customer findByIdAndFirstName(int id, String name);
+  Customer findByIdAndFirstName(Integer id, String name);
 
   @Select("")
-  Customer findByIdOrFirstName(int id, String name);
+  Customer findByIdOrFirstName(Integer id, String name);
 
   @Select("")
-  Customer findById(int id);
+  Customer findById(Integer id);
 
   @Select("")
-  Integer countById(int id);
+  Integer countById(Integer id);
 
   @Select("")
   List<Customer> findByFirstNameOrderByIdAsc(String name);
@@ -44,15 +45,18 @@ public interface CustomerMapper extends Mapper<Customer> {
   List<Customer> findByIdIn(List<Integer> idList);
 
   @Select("")
-  String findFirstNameById(int id);
+  String findFirstNameById(Integer id);
+
+  @Select("")
+  String findDistinctFirstNameById(Integer id);
 
   @Delete("")
-  int deleteById(int id);
+  int deleteById(Integer id);
 
   @Delete("")
   int deleteByFirstName(String name);
 
   @Delete("")
-  int deleteByFirstNameAndId(String name, int id);
+  int deleteByFirstNameAndId(String name, Integer id);
 
 }

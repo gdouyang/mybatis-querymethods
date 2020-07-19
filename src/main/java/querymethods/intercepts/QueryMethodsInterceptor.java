@@ -17,11 +17,11 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 
+import querymethods.QueryMethodsConfig;
 import querymethods.QueryMethodsException;
 import querymethods.QueryMethodsHelper;
 import querymethods.mybatisplus.MybatisPlusWhereBuilder;
-import querymethods.tkmapper.ExampleUtil;
-import querymethods.util.ORMUtil;
+import querymethods.tkmapper.TkMapperWhereBuilder;
 
 /**
  * 查询方法拦截器
@@ -87,10 +87,10 @@ public class QueryMethodsInterceptor implements Interceptor {
     } else {
       params.add(parameter);
     }
-    if (ORMUtil.isTkMapper()) {
-      Object example = ExampleUtil.getExampleByMsId(msId, params);
+    if (QueryMethodsConfig.isTkMapper()) {
+      Object example = TkMapperWhereBuilder.getExampleByMsId(msId, params);
       return example;
-    } else if (ORMUtil.isMybatisPlus()) {
+    } else if (QueryMethodsConfig.isMybatisPlus()) {
       Object example = MybatisPlusWhereBuilder.getExampleByMsId(msId, params);
       return example;
     }

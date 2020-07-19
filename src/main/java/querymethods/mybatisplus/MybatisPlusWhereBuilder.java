@@ -1,20 +1,23 @@
 package querymethods.mybatisplus;
 
+import java.util.Collection;
 import java.util.Queue;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import org.apache.ibatis.binding.MapperMethod.ParamMap;
 
-import querymethods.springdata.PartTreeFactory;
-import querymethods.springdata.mapping.PropertyPath;
-import querymethods.springdata.query.domain.Sort;
-import querymethods.springdata.query.parser.Part;
-import querymethods.springdata.query.parser.Part.Type;
-import querymethods.springdata.query.parser.PartTree;
-import querymethods.springdata.query.parser.PartTree.OrPart;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+
+import querymethods.spring.data.PartTreeFactory;
+import querymethods.spring.data.mapping.PropertyPath;
+import querymethods.spring.data.query.domain.Sort;
+import querymethods.spring.data.query.parser.Part;
+import querymethods.spring.data.query.parser.PartTree;
+import querymethods.spring.data.query.parser.Part.Type;
+import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.util.MsIdUtil;
-import tk.mybatis.mapper.util.StringUtil;
 
 /**
  * where条件构建类 参考spring data PredicateBuilder
@@ -22,6 +25,7 @@ import tk.mybatis.mapper.util.StringUtil;
  * @author OYGD
  *
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MybatisPlusWhereBuilder {
 
   /**
@@ -32,7 +36,7 @@ public class MybatisPlusWhereBuilder {
    * @return
    * @throws ClassNotFoundException
    */
-  public static QueryWrapper<?> getExampleByMsId(String msId, Queue<Object> params)
+  public static ParamMap<Object> getExampleByMsId(String msId, Queue<Object> params)
       throws ClassNotFoundException {
 
     Class<?> entityClass = MsIdUtil.getEntityClass(msId);
@@ -40,32 +44,65 @@ public class MybatisPlusWhereBuilder {
     String methodName = MsIdUtil.getMethodName(msId);
 
     PartTree tree = PartTreeFactory.create(msId, methodName);
-    QueryWrapper example = new QueryWrapper(entityClass);
-//    example.setDistinct(tree.isDistinct());
+
+    QueryWrapper<?> wrapper = new QueryWrapper();
+    wrapper.getSqlSelect();
+    TableInfo tbInfo = MybatisPlusUtil.getTableInfo(entityClass);
+    MPTableInfo tableInfo = MybatisPlusUtil.getMPTableInfo(entityClass);
+
+    String sqlSelect = Constants.EMPTY;
+    if (tree.isDistinct()) {
+      sqlSelect = " distinct ";
+    }
+
     String queryProperty = tree.getQueryProperty();
-    if (StringUtil.isNotEmpty(queryProperty)) {
-      TableInfo tableInfo = MybatisPlusUtil.getTableInfo(entityClass);
-      TableFieldInfo tableFieldInfo = tableInfo.getFieldList().stream()
-          .filter(p -> p.getProperty().equals(queryProperty)).findFirst().get();
-      example.select(tableFieldInfo.getColumn());
+    if (StringUtils.isNotBlank(queryProperty)) {
+      sqlSelect += tableInfo.getColumnByProperty(queryProperty);
+    } else if (tree.isDistinct()) {
+      sqlSelect += tbInfo.getAllSqlSelect();
     }
-    for (OrPart node : tree) {
-      for (Part part : node) {
-        build(part, example, params);
-      }
-      example.or();
+
+    if (!Constants.EMPTY.equals(sqlSelect)) {
+      wrapper.select(sqlSelect);
     }
+
+    build(params, tree, wrapper, tableInfo);
+
     Sort sort = tree.getSort();
     if (sort != null) {
       for (Sort.Order order : sort) {
         if (order.isAscending()) {
-          example.orderByAsc(order.getProperty());
+          wrapper.orderByAsc(order.getProperty());
         } else {
-          example.orderByDesc(order.getProperty());
+          wrapper.orderByDesc(order.getProperty());
         }
       }
     }
-    return example;
+    ParamMap<Object> pm = new ParamMap<>();
+    pm.put(Constants.WRAPPER, wrapper);
+    return pm;
+  }
+
+  private static void build(Queue<Object> params, PartTree tree, QueryWrapper<?> wrapper,
+      MPTableInfo tableInfo) {
+    int index = 0;
+    for (OrPart node : tree) {
+      if (index == 0) {
+        andSql(params, wrapper, node, tableInfo);
+      } else {
+        wrapper.or(i -> {
+          andSql(params, i, node, tableInfo);
+        });
+      }
+      index++;
+    }
+  }
+
+  private static void andSql(Queue<Object> params, QueryWrapper<?> wrapper, OrPart node,
+      MPTableInfo tableInfo) {
+    for (Part part : node) {
+      build(part, wrapper, params, tableInfo);
+    }
   }
 
   /**
@@ -73,70 +110,71 @@ public class MybatisPlusWhereBuilder {
    * 
    * @return
    */
-  public static void build(Part part, QueryWrapper root, Queue<Object> args) {
+  public static void build(Part part, QueryWrapper root, Queue<Object> args,
+      MPTableInfo tableInfo) {
 
     PropertyPath property = part.getProperty();
     Type type = part.getType();
-    String segment = property.getSegment();
+    String column = tableInfo.getColumnByProperty(property.getSegment());
     switch (type) {
       case BETWEEN:
-        root.between(segment, args.poll(), args.poll());
+        root.between(column, args.poll(), args.poll());
         break;
       case AFTER:
       case GREATER_THAN:
-        root.gt(segment, args.poll());
+        root.gt(column, args.poll());
         break;
       case GREATER_THAN_EQUAL:
-        root.ge(segment, args.poll());
+        root.ge(column, args.poll());
         break;
       case BEFORE:
       case LESS_THAN:
-        root.lt(segment, args.poll());
+        root.lt(column, args.poll());
         break;
       case LESS_THAN_EQUAL:
-        root.le(segment, args.poll());
+        root.le(column, args.poll());
         break;
       case IS_NULL:
-        root.isNull(segment);
+        root.isNull(column);
         break;
       case IS_NOT_NULL:
-        root.isNotNull(segment);
+        root.isNotNull(column);
         break;
       case NOT_IN:
-        root.notIn(segment, (Iterable<?>) args.poll());
+        root.notIn(column, ((Collection<?>) args.poll()).toArray());
         break;
       case IN:
-        root.in(segment, (Iterable<?>) args.poll());
+        root.in(column, ((Collection<?>) args.poll()).toArray());
         break;
       case STARTING_WITH:
-        root.like(segment, "%" + args.poll().toString());
+        root.likeLeft(column, args.poll());
         break;
       case ENDING_WITH:
-        root.like(segment, args.poll().toString() + "%");
+        root.likeRight(column, args.poll());
         break;
       case CONTAINING:
-        root.in(segment, "%" + args.poll().toString() + "%");
+        root.like(column, args.poll());
         break;
       case NOT_CONTAINING:
-        root.notIn(segment, (Iterable<?>) args.poll());
+        root.notLike(column, args.poll());
         break;
       case LIKE:
-        root.like(segment, args.poll().toString());
+        root.apply(column + " like {0}", args.poll().toString());
         break;
       case NOT_LIKE:
-        root.notLike(segment, args.poll().toString());
+        root.apply(column + " not like {0}", args.poll());
         break;
       case TRUE:
-        root.eq(segment, true);
+        root.eq(column, true);
         break;
       case FALSE:
-        root.eq(segment, false);
+        root.eq(column, false);
         break;
       case SIMPLE_PROPERTY:
-        root.eq(segment, args.poll());
+        root.eq(column, args.poll());
         break;
       case NEGATING_SIMPLE_PROPERTY:
-        root.ne(segment, args.poll());
+        root.ne(column, args.poll());
         break;
       default:
         throw new IllegalArgumentException("Unsupported keyword " + type);
