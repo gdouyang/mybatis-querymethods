@@ -40,7 +40,7 @@ public class QuickDuckApplication {
 ```
 spring mvc启动方式
 ```
-<bean class="querymethods.MapperScannerConfigurer">
+<bean class="querymethods.tkmapper.MapperScannerConfigurer">
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>

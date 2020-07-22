@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package querymethods;
+package querymethods.tkmapper;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.StringUtils;
+
 import tk.mybatis.mapper.common.Marker;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.spring.mapper.ClassPathMapperScanner;

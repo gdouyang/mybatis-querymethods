@@ -1,4 +1,6 @@
-package querymethods;
+package querymethods.tkmapper;
+
+import querymethods.QueryMethodsHelper;
 
 public class QueryMethodsMapperFactoryBean<T> extends tk.mybatis.spring.mapper.MapperFactoryBean<T> {
 
