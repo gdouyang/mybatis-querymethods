@@ -19,6 +19,9 @@ public interface QueryMethodsMapper {
   @Select("")
   Integer countById(Integer id);
 
+//  @Select("")
+//  Integer countById1(Integer id);
+
   @Select("")
   List<Customer> findByFirstNameOrderByIdAsc(String name);
 
