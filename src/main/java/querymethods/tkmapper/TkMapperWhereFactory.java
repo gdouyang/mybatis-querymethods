@@ -24,11 +24,11 @@ import tk.mybatis.mapper.util.StringUtil;
  * @author OYGD
  *
  */
-public class TkMapperWhereBuilder {
+public class TkMapperWhereFactory {
 
-  protected final static Log logger = LogFactory.getLog(TkMapperWhereBuilder.class);
+  protected final static Log logger = LogFactory.getLog(TkMapperWhereFactory.class);
 
-  private TkMapperWhereBuilder() {}
+  private TkMapperWhereFactory() {}
 
   /**
    * 根据MappedStatement id 与参数生成Example

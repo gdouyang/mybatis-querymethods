@@ -20,8 +20,8 @@ import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
 import querymethods.QueryMethodsConfig;
 import querymethods.QueryMethodsException;
 import querymethods.QueryMethodsHelper;
-import querymethods.mybatisplus.MybatisPlusWhereBuilder;
-import querymethods.tkmapper.TkMapperWhereBuilder;
+import querymethods.mybatisplus.MybatisPlusWhereFactory;
+import querymethods.tkmapper.TkMapperWhereFactory;
 
 /**
  * 查询方法拦截器
@@ -88,10 +88,10 @@ public class QueryMethodsInterceptor implements Interceptor {
       params.add(parameter);
     }
     if (QueryMethodsConfig.isTkMapper()) {
-      Object example = TkMapperWhereBuilder.getExampleByMsId(msId, params);
+      Object example = TkMapperWhereFactory.getExampleByMsId(msId, params);
       return example;
     } else if (QueryMethodsConfig.isMybatisPlus()) {
-      Object example = MybatisPlusWhereBuilder.getExampleByMsId(msId, params);
+      Object example = MybatisPlusWhereFactory.getExampleByMsId(msId, params);
       return example;
     }
 

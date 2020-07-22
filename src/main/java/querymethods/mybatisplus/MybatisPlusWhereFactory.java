@@ -14,8 +14,8 @@ import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part;
-import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.Part.Type;
+import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.util.MsIdUtil;
 
@@ -26,7 +26,7 @@ import querymethods.util.MsIdUtil;
  *
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class MybatisPlusWhereBuilder {
+public class MybatisPlusWhereFactory {
 
   /**
    * 根据MappedStatement id 与参数生成Example
