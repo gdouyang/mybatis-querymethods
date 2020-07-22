@@ -120,7 +120,7 @@ public class QueryMethodsHelper {
         msObject.setValue("sqlSource", s);
 
       } catch (ClassNotFoundException | NoSuchFieldException e) {
-        throw new RuntimeException(e);
+        throw new QueryMethodsException(e);
       }
     }
   }

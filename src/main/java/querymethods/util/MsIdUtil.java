@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import querymethods.QueryMethodsConfig;
+import querymethods.QueryMethodsException;
 
 /**
  * msId工具类，通过msId获取MapperClass, methodName, entityClass
@@ -58,7 +59,7 @@ public class MsIdUtil {
       cacheMapperClass.put(msId, mapperClass);
       return mapperClass;
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
+      throw new QueryMethodsException(e);
     }
   }
 
@@ -94,7 +95,7 @@ public class MsIdUtil {
           try {
             entityClass = Class.forName(t.getActualTypeArguments()[0].getTypeName());
           } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new QueryMethodsException(e);
           }
           break;
         }
