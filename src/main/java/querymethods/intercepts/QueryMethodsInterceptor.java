@@ -46,7 +46,7 @@ public class QueryMethodsInterceptor implements Interceptor {
     MappedStatement ms = (MappedStatement) args[0];
 
     String msId = ms.getId();
-    if (QueryMethodsHelper.isQueryMethods(msId)) {
+    if (QueryMethodsHelper.isQueryMethod(msId)) {
       Object parameter = args[1];
       RowBounds rbs = (RowBounds) args[2];
       ResultHandler<?> rh = (ResultHandler<?>) args[3];
@@ -54,7 +54,7 @@ public class QueryMethodsInterceptor implements Interceptor {
       Object example = getExample(msId, parameter);
 
       return invocation.getMethod().invoke(executor, ms, example, rbs, rh);
-    } else if (QueryMethodsHelper.isDeleteMethods(msId)) {
+    } else if (QueryMethodsHelper.isDeleteMethod(msId)) {
       Object parameter = args[1];
       Object example = getExample(msId, parameter);
       return invocation.getMethod().invoke(executor, ms, example);

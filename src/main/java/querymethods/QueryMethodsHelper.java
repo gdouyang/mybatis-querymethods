@@ -38,11 +38,11 @@ public class QueryMethodsHelper {
 
   private static final Map<String, Boolean> deleteMethod = new HashMap<>();
 
-  public static boolean isQueryMethods(String msId) {
+  public static boolean isQueryMethod(String msId) {
     return queryMethod.containsKey(msId);
   }
 
-  public static boolean isDeleteMethods(String msId) {
+  public static boolean isDeleteMethod(String msId) {
     return deleteMethod.containsKey(msId);
   }
 
