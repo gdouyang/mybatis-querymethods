@@ -27,12 +27,56 @@ public interface QueryMethodsMapper {
 
   @Select("")
   List<Customer> findByFirstNameStartingWith(String name);
-
+  
+  @Select("")
+  List<Customer> findByFirstNameEndingWith(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameContaining(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameNotContaining(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameLike(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameNotLike(String name);
+  
   @Select("")
   List<Customer> findByIdInOrId(List<Integer> idList, Integer id);
-
+  
   @Select("")
   List<Customer> findByIdIn(List<Integer> idList);
+  
+  @Select("")
+  List<Customer> findByIdNotIn(List<Integer> idList);
+  
+  @Select("")
+  List<Customer> findByIdIsNull();
+  
+  @Select("")
+  List<Customer> findByIdIsNotNull();
+  
+  @Select("")
+  List<Customer> findByActiveTrue();
+  
+  @Select("")
+  List<Customer> findByIdBetween(Integer from, Integer to);
+  
+  @Select("")
+  List<Customer> findByIdAfter(Integer from);
+  @Select("")
+  List<Customer> findByIdGreaterThan(Integer from);
+  @Select("")
+  List<Customer> findByIdGreaterThanEqual(Integer from);
+  
+  @Select("")
+  List<Customer> findByIdBefore(Integer from);
+  @Select("")
+  List<Customer> findByIdLessThan(Integer from);
+  @Select("")
+  List<Customer> findByIdLessThanEqual(Integer from);
 
   @Select("")
   String findFirstNameById(Integer id);

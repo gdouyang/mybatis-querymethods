@@ -9,8 +9,8 @@ import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part;
-import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.Part.Type;
+import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.tkmapper.Example.Criteria;
 import querymethods.tkmapper.Example.OrderBy;
@@ -55,7 +55,7 @@ public class TkMapperWhereFactory {
       Example.Criteria criteria = example.createCriteria();
       for (OrPart node : tree) {
         for (Part part : node) {
-          build(part, criteria, params);
+          build(part, criteria, params, msId);
         }
         criteria = example.createCriteria();
         example.or(criteria);
@@ -82,55 +82,85 @@ public class TkMapperWhereFactory {
    * 
    * @return
    */
-  public static Criteria build(Part part, Criteria root, Queue<Object> args) {
+  public static Criteria build(Part part, Criteria root, Queue<Object> args, String msId) {
 
-    PropertyPath property = part.getProperty();
+    PropertyPath pp = part.getProperty();
     Type type = part.getType();
-    String segment = property.getSegment();
+    String property = pp.getSegment();
     switch (type) {
       case BETWEEN:
-        return root.andBetween(segment, args.poll(), args.poll());
+        Object a = checkNotNull(property, args, msId);
+        Object b = checkNotNull(property, args, msId);
+        return root.andBetween(property, a, b);
       case AFTER:
       case GREATER_THAN:
-        return root.andGreaterThan(segment, args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andGreaterThan(property, a);
       case GREATER_THAN_EQUAL:
-        return root.andGreaterThanOrEqualTo(segment, args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andGreaterThanOrEqualTo(property, a);
       case BEFORE:
       case LESS_THAN:
-        return root.andLessThan(segment, args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andLessThan(property, a);
       case LESS_THAN_EQUAL:
-        return root.andLessThanOrEqualTo(segment, args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andLessThanOrEqualTo(property, a);
       case IS_NULL:
-        return root.andIsNull(segment);
+        return root.andIsNull(property);
       case IS_NOT_NULL:
-        return root.andIsNotNull(segment);
+        return root.andIsNotNull(property);
       case NOT_IN:
-        return root.andNotIn(segment, (Iterable<?>) args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andNotIn(property, (Iterable<?>) a);
       case IN:
-        return root.andIn(segment, (Iterable<?>) args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andIn(property, (Iterable<?>) a);
       case STARTING_WITH:
-        return root.andLike(segment, "%" + args.poll().toString());
+        a = checkNotNull(property, args, msId);
+        return root.andLike(property, a.toString() + "%");
       case ENDING_WITH:
-        return root.andLike(segment, args.poll().toString() + "%");
+        a = checkNotNull(property, args, msId);
+        return root.andLike(property, "%" + a.toString());
       case CONTAINING:
-        return root.andLike(segment, "%" + args.poll().toString() + "%");
+        a = checkNotNull(property, args, msId);
+        return root.andLike(property, "%" + a.toString() + "%");
       case NOT_CONTAINING:
-        return root.andNotIn(segment, (Iterable<?>) args.poll());
+        a = checkNotNull(property, args, msId);
+        return root.andNotLike(property, "%" + a.toString() + "%");
       case LIKE:
-        return root.andLike(segment, args.poll().toString());
+        a = checkNotNull(property, args, msId);
+        return root.andLike(property, a.toString());
       case NOT_LIKE:
-        return root.andNotLike(segment, args.poll().toString());
+        a = checkNotNull(property, args, msId);
+        return root.andNotLike(property, a.toString());
       case TRUE:
-        return root.andEqualTo(segment, true);
+        return root.andEqualTo(property, 1);
       case FALSE:
-        return root.andEqualTo(segment, false);
+        return root.andEqualTo(property, 0);
       case SIMPLE_PROPERTY:
-        return root.andEqualTo(segment, args.poll());
+        a = args.poll();
+        if (a == null) {
+          return root.andIsNull(property);
+        }
+        return root.andEqualTo(property, a);
       case NEGATING_SIMPLE_PROPERTY:
-        return root.andNotEqualTo(segment, args.poll());
+        a = args.poll();
+        if (a == null) {
+          return root.andIsNotNull(property);
+        }
+        return root.andNotEqualTo(property, a);
       default:
         throw new IllegalArgumentException("Unsupported keyword " + type);
     }
+  }
+  
+  static Object checkNotNull(String property, Queue<Object> args, String msId) {
+    Object param = args.poll();
+    if (param == null) {
+      throw new IllegalArgumentException("Value must not be null! [" + property + " -> " + msId + "]");
+    }
+    return param;
   }
 
 }

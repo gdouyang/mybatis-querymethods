@@ -66,7 +66,7 @@ public class MybatisPlusWhereFactory {
       wrapper.select(sqlSelect);
     }
 
-    build(params, tree, wrapper, tableInfo);
+    build(params, tree, wrapper, tableInfo, msId);
 
     Sort sort = tree.getSort();
     if (sort != null) {
@@ -84,14 +84,14 @@ public class MybatisPlusWhereFactory {
   }
 
   private static void build(Queue<Object> params, PartTree tree, QueryWrapper<?> wrapper,
-      MPTableInfo tableInfo) {
+      MPTableInfo tableInfo, String msId) {
     int index = 0;
     for (OrPart node : tree) {
       if (index == 0) {
-        andSql(params, wrapper, node, tableInfo);
+        andSql(params, wrapper, node, tableInfo, msId);
       } else {
         wrapper.or(i -> {
-          andSql(params, i, node, tableInfo);
+          andSql(params, i, node, tableInfo, msId);
         });
       }
       index++;
@@ -99,9 +99,9 @@ public class MybatisPlusWhereFactory {
   }
 
   private static void andSql(Queue<Object> params, QueryWrapper<?> wrapper, OrPart node,
-      MPTableInfo tableInfo) {
+      MPTableInfo tableInfo, String msId) {
     for (Part part : node) {
-      build(part, wrapper, params, tableInfo);
+      build(part, wrapper, params, tableInfo, msId);
     }
   }
 
@@ -110,29 +110,36 @@ public class MybatisPlusWhereFactory {
    * 
    * @return
    */
-  public static void build(Part part, QueryWrapper root, Queue<Object> args,
-      MPTableInfo tableInfo) {
+  public static void build(Part part, QueryWrapper root, Queue<Object> args, MPTableInfo tableInfo,
+      String msId) {
 
-    PropertyPath property = part.getProperty();
+    PropertyPath pp = part.getProperty();
     Type type = part.getType();
-    String column = tableInfo.getColumnByProperty(property.getSegment());
+    String property = pp.getSegment();
+    String column = tableInfo.getColumnByProperty(property);
     switch (type) {
       case BETWEEN:
-        root.between(column, args.poll(), args.poll());
+        Object a = checkNotNull(property, args, msId);
+        Object b = checkNotNull(property, args, msId);
+        root.between(column, a, b);
         break;
       case AFTER:
       case GREATER_THAN:
-        root.gt(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.gt(column, a);
         break;
       case GREATER_THAN_EQUAL:
-        root.ge(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.ge(column, a);
         break;
       case BEFORE:
       case LESS_THAN:
-        root.lt(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.lt(column, a);
         break;
       case LESS_THAN_EQUAL:
-        root.le(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.le(column, a);
         break;
       case IS_NULL:
         root.isNull(column);
@@ -141,44 +148,70 @@ public class MybatisPlusWhereFactory {
         root.isNotNull(column);
         break;
       case NOT_IN:
-        root.notIn(column, ((Collection<?>) args.poll()).toArray());
+        a = checkNotNull(property, args, msId);
+        root.notIn(column, ((Collection<?>) a).toArray());
         break;
       case IN:
-        root.in(column, ((Collection<?>) args.poll()).toArray());
+        a = checkNotNull(property, args, msId);
+        root.in(column, ((Collection<?>) a).toArray());
         break;
       case STARTING_WITH:
-        root.likeLeft(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.likeLeft(column, a);
         break;
       case ENDING_WITH:
-        root.likeRight(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.likeRight(column, a);
         break;
       case CONTAINING:
-        root.like(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.like(column, a);
         break;
       case NOT_CONTAINING:
-        root.notLike(column, args.poll());
+        a = checkNotNull(property, args, msId);
+        root.notLike(column, a);
         break;
       case LIKE:
-        root.apply(column + " like {0}", args.poll().toString());
+        a = checkNotNull(property, args, msId);
+        root.apply(column + " like {0}", a);
         break;
       case NOT_LIKE:
-        root.apply(column + " not like {0}", args.poll());
+        a = checkNotNull(property, args, msId);
+        root.apply(column + " not like {0}", a);
         break;
       case TRUE:
-        root.eq(column, true);
+        root.eq(column, 1);
         break;
       case FALSE:
-        root.eq(column, false);
+        root.eq(column, 0);
         break;
       case SIMPLE_PROPERTY:
-        root.eq(column, args.poll());
+        a = args.poll();
+        if (a == null) {
+          root.isNull(column);
+        } else {
+          root.eq(column, a);
+        }
         break;
       case NEGATING_SIMPLE_PROPERTY:
-        root.ne(column, args.poll());
+        a = args.poll();
+        if (a == null) {
+          root.isNotNull(column);
+        } else {
+          root.ne(column, a);
+        }
         break;
       default:
         throw new IllegalArgumentException("Unsupported keyword " + type);
     }
+  }
+
+  static Object checkNotNull(String property, Queue<Object> args, String msId) {
+    Object param = args.poll();
+    if (param == null) {
+      throw new IllegalArgumentException("Value must not be null! [" + property + " -> " + msId + "]");
+    }
+    return param;
   }
 
 
