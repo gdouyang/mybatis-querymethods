@@ -1,18 +1,12 @@
 package querymethods.util;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.apache.ibatis.mapping.MappedStatement;
 
-import querymethods.springdata.PartTreeFactory;
-import querymethods.springdata.mapping.PropertyPath;
-import querymethods.springdata.query.domain.Sort;
-import querymethods.springdata.query.parser.Part;
-import querymethods.springdata.query.parser.PartTree;
-import querymethods.springdata.query.parser.PartTree.OrPart;
-import tk.mybatis.mapper.entity.EntityColumn;
-import tk.mybatis.mapper.mapperhelper.EntityHelper;
+import querymethods.QueryMethodsConfig;
+import querymethods.mybatisplus.MybatisPlusUtil;
+import querymethods.spring.data.PartTreeFactory;
+import querymethods.spring.data.query.parser.PartTree;
+import querymethods.tkmapper.TkMapperUtil;
 
 /**
  * sql重写工具类
@@ -40,51 +34,41 @@ public class SqlUtil {
       String methodName = MsIdUtil.getMethodName(msId);
       PartTree tree = PartTreeFactory.create(msId, methodName);
       String xmlSql = null;
-
-      checkProperty(msId, entityClass, tree);
-      if (tree.isCountProjection()) {
-        xmlSql = TkMapperUtil.selectCountByExample(entityClass);
-      } else if (tree.isDelete()) {
-        xmlSql = TkMapperUtil.deleteByExample(ms, entityClass);
-      } else {
-        xmlSql = TkMapperUtil.selectByExample(ms, entityClass, tree);
+      if (QueryMethodsConfig.isTkMapper()) {
+        xmlSql = tkMapper(ms, msId, entityClass, tree);
+      } else if (QueryMethodsConfig.isMybatisPlus()) {
+        xmlSql = mybatisPlus(ms, msId, entityClass, tree);
       }
-      return "<script>\n\t" + xmlSql + "</script>";
+      return xmlSql;
     }
     return null;
   }
 
-  /**
-   * 检查property是否在entityClass中
-   * 
-   * @param entityClass
-   * @param tree
-   * @throws NoSuchFieldException 当property不存在entityClass中时
-   */
-  public static void checkProperty(String msId, Class<?> entityClass, PartTree tree)
-      throws NoSuchFieldException {
-    Set<EntityColumn> columnSet = EntityHelper.getColumns(entityClass);
-    Set<String> propertys =
-        columnSet.stream().map(EntityColumn::getProperty).collect(Collectors.toSet());
+  private static String tkMapper(MappedStatement ms, String msId, Class<?> entityClass,
+      PartTree tree) throws NoSuchFieldException {
+    String xmlSql;
+    TkMapperUtil.checkProperty(msId, entityClass, tree);
+    if (tree.isCountProjection()) {
+      xmlSql = TkMapperUtil.selectCountByExample(entityClass);
+    } else if (tree.isDelete()) {
+      xmlSql = TkMapperUtil.deleteByExample(ms, entityClass);
+    } else {
+      xmlSql = TkMapperUtil.selectByExample(ms, entityClass, tree);
+    }
+    return "<script>\n\t" + xmlSql + "</script>";
+  }
 
-    String name = entityClass.getName();
-    for (OrPart node : tree) {
-      for (Part part : node) {
-        PropertyPath property = part.getProperty();
-        String segment = property.getSegment();
-        if (!propertys.contains(segment)) {
-          throw new NoSuchFieldException(String.format("%s -> %s", segment, msId));
-        }
-      }
+  private static String mybatisPlus(MappedStatement ms, String msId, Class<?> entityClass,
+      PartTree tree) throws NoSuchFieldException {
+    String xmlSql;
+    MybatisPlusUtil.checkProperty(msId, entityClass, tree);
+    if (tree.isCountProjection()) {
+      xmlSql = MybatisPlusUtil.selectCountByExample(entityClass);
+    } else if (tree.isDelete()) {
+      xmlSql = MybatisPlusUtil.deleteByExample(ms, entityClass);
+    } else {
+      xmlSql = MybatisPlusUtil.selectByExample(ms, entityClass, tree);
     }
-    Sort sort = tree.getSort();
-    if (sort != null) {
-      for (Sort.Order order : sort) {
-        String property = order.getProperty();
-        if (!propertys.contains(property)) {
-          throw new NoSuchFieldException(String.format("%s -> %s", property, msId));
-        }
-      }
-    }
+    return xmlSql;
   }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tkmapper.CustomerMapper">
+  <select id="selectCustomer" resultType="querymethods.Customer">
+    select * from customer where id = #{id}
+  </select>
+  
+  <insert id="insert1" parameterType="querymethods.Customer">
+  	insert into customer(id, first_name, last_name) values(#{id}, #{firstName}, #{lastName})
+  </insert>
+</mapper>

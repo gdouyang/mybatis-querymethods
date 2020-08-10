@@ -40,7 +40,7 @@ public class QuickDuckApplication {
 ```
 spring mvc启动方式
 ```
-<bean class="querymethods.MapperScannerConfigurer">
+<bean class="querymethods.tkmapper.MapperScannerConfigurer">
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>
@@ -118,6 +118,7 @@ CREATE TABLE `customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
+  `active` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 ```

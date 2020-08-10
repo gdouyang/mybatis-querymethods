@@ -1,7 +1,7 @@
 package querymethods;
 
 
-import querymethods.springdata.query.parser.PartTree;
+import querymethods.spring.data.query.parser.PartTree;
 
 /**
  * PartTreeTest

@@ -24,35 +24,40 @@ public class Customer {
   @Column(name = "last_name")
   private String lastName;
 
+  @Column(name = "active")
+  private Boolean active;
+
   public Integer getId() {
     return id;
   }
-
 
   public void setId(Integer id) {
     this.id = id;
   }
 
-
   public String getFirstName() {
     return firstName;
   }
-
 
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
 
-
   public String getLastName() {
     return lastName;
   }
-
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
 
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
   @Override
   public String toString() {
