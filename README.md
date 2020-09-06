@@ -14,7 +14,7 @@ tkmapper版本
 </dependency>
 ```
 
-使用方式
+使用方式 <https://mvnrepository.com/artifact/com.github.gdouyang/mybatis-querymethods>
 ```
 <dependency>
     <groupId>com.github.gdouyang</groupId>
