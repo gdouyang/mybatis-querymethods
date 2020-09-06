@@ -23,10 +23,10 @@ tkmapper版本
 </dependency>
 ```
 
-spring boot 启动方式
+spring boot 启动方式（tkmapper）
 ```
 @tk.mybatis.spring.annotation.MapperScan(
-		factoryBean = QueryMethodsMapperFactoryBean.class
+		factoryBean = querymethods.mybatisplus.QueryMethodsMapperFactoryBean.class
 )
 @EnableTransactionManagement
 @SpringBootApplication
@@ -35,6 +35,23 @@ public class QuickDuckApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuickDuckApplication.class, args);
 	}
+
+}
+```
+spring boot 启动方式（mybatis-plus）
+```
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+@MapperScan(basePackages = "com.example.demo", factoryBean = querymethods.mybatisplus.QueryMethodsMapperFactoryBean.class)
+@SpringBootApplication
+public class QuickDuckApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(QuickDuckApplication.class, args);
+  }
 
 }
 ```
@@ -64,48 +81,88 @@ spring mvc启动方式
 </bean>
 ```
 
-在Mapper使用`Select`注解，给于空字符串， 没有注解的需要在xml文件中配置
+在Mapper使用`Select`注解，给空字符串， 没有注解的需要在xml文件中配置
 ```
 public interface CustomerMapper extends Mapper<Customer> {
-  Customer selectCustomer(int id);
-
-  void insert1(Customer b);
+  @Select("")
+  Customer findByIdAndFirstName(Integer id, String name);
 
   @Select("")
-  Customer findByIdAndFirstName(int id, String name);
+  Customer findByIdOrFirstName(Integer id, String name);
 
   @Select("")
-  Customer findByIdOrFirstName(int id, String name);
+  Customer findById(Integer id);
 
   @Select("")
-  Customer findById(int id);
-
-  @Select("")
-  Integer countById(int id);
+  Integer countById(Integer id);
 
   @Select("")
   List<Customer> findByFirstNameOrderByIdAsc(String name);
 
   @Select("")
   List<Customer> findByFirstNameStartingWith(String name);
-
+  
+  @Select("")
+  List<Customer> findByFirstNameEndingWith(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameContaining(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameNotContaining(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameLike(String name);
+  
+  @Select("")
+  List<Customer> findByFirstNameNotLike(String name);
+  
   @Select("")
   List<Customer> findByIdInOrId(List<Integer> idList, Integer id);
-
+  
   @Select("")
   List<Customer> findByIdIn(List<Integer> idList);
+  
+  @Select("")
+  List<Customer> findByIdNotIn(List<Integer> idList);
+  
+  @Select("")
+  List<Customer> findByIdIsNull();
+  
+  @Select("")
+  List<Customer> findByIdIsNotNull();
+  
+  @Select("")
+  List<Customer> findByActiveTrue();
+  
+  @Select("")
+  List<Customer> findByIdBetween(Integer from, Integer to);
+  
+  @Select("")
+  List<Customer> findByIdAfter(Integer from);
+  @Select("")
+  List<Customer> findByIdGreaterThan(Integer from);
+  @Select("")
+  List<Customer> findByIdGreaterThanEqual(Integer from);
+  
+  @Select("")
+  List<Customer> findByIdBefore(Integer from);
+  @Select("")
+  List<Customer> findByIdLessThan(Integer from);
+  @Select("")
+  List<Customer> findByIdLessThanEqual(Integer from);
 
   @Select("")
-  String findFirstNameById(int id);
+  String findFirstNameById(Integer id);
 
-  @Delete("")
-  int deleteById(int id);
+  @Select("")
+  String findDistinctFirstNameById(Integer id);
 
   @Delete("")
   int deleteByFirstName(String name);
 
   @Delete("")
-  int deleteByFirstNameAndId(String name, int id);
+  int deleteByFirstNameAndId(String name, Integer id);
 }
 ```
 

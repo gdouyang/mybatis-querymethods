@@ -103,6 +103,6 @@ public class QueryMethodsTest {
   }
 
   public static void log(String str) {
-    System.out.println(String.format("------- %s ---------", str));
+    System.out.println(String.format("\n\n------- %s ---------", str));
   }
 }

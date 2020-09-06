@@ -1,4 +1,4 @@
-package tkmapper;
+package tkmapper.other;
 
 
 import java.io.IOException;
