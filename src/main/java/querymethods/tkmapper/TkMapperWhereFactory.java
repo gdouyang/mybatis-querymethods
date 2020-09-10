@@ -12,10 +12,11 @@ import querymethods.spring.data.query.parser.Part;
 import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
-import querymethods.tkmapper.Example.Criteria;
-import querymethods.tkmapper.Example.OrderBy;
 import querymethods.util.MsIdUtil;
 import tk.mybatis.mapper.MapperException;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+import tk.mybatis.mapper.entity.Example.OrderBy;
 import tk.mybatis.mapper.util.StringUtil;
 
 /**

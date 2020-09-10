@@ -91,11 +91,11 @@ public class QueryMethodsTest {
 
     log("findFirstNameById");
     String firstName = mapper.findFirstNameById(id);
-    assertNotNull(firstName);
+    assertEquals("OY", firstName);
 
     log("findDistinctFirstNameById");
     firstName = mapper.findDistinctFirstNameById(id);
-    assertNotNull(firstName);
+    assertEquals("OY", firstName);
 
     log("deleteByFirstNameAndId");
     int num = mapper.deleteByFirstNameAndId(b.getFirstName(), id);
@@ -103,6 +103,6 @@ public class QueryMethodsTest {
   }
 
   public static void log(String str) {
-    System.out.println(String.format("\n\n------- %s ---------", str));
+    System.out.println(String.format("\n------- %s ---------", str));
   }
 }
