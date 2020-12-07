@@ -105,6 +105,10 @@ public class MybatisPlusUtil {
     propertys.add(tableInfo.getKeyProperty());
 
     for (OrPart node : tree) {
+      // 检查查询字段是否为null
+      if (StringUtils.isNotBlank(tree.getQueryProperty()) && !propertys.contains(tree.getQueryProperty())) {
+        throw new NoSuchFieldException(String.format("%s -> %s", tree.getQueryProperty(), msId));
+      }
       for (Part part : node) {
         PropertyPath property = part.getProperty();
         String segment = property.getSegment();

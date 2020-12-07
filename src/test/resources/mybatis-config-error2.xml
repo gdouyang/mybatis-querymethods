@@ -23,9 +23,8 @@
       </dataSource>
     </environment>
   </environments>
-  
   <mappers>
-  <mapper resource="mybatisplus/CustomerMapperMpError.xml"/>
+    <mapper resource="tkmapper/CustomerMapperError2.xml"/>
   </mappers>
   
 </configuration>

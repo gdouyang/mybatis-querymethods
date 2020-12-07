@@ -25,7 +25,7 @@
   </environments>
   
   <mappers>
-  <mapper resource="mybatisplus/CustomerMapperMpError.xml"/>
+  <mapper resource="mybatisplus/CustomerMapperMpError2.xml"/>
   </mappers>
   
 </configuration>
