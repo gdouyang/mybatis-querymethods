@@ -26,7 +26,7 @@ tkmapper版本
 spring boot 启动方式（tkmapper）
 ```
 @tk.mybatis.spring.annotation.MapperScan(
-		factoryBean = querymethods.mybatisplus.QueryMethodsMapperFactoryBean.class
+		factoryBean = querymethods.tkmapper.QueryMethodsMapperFactoryBean.class
 )
 @EnableTransactionManagement
 @SpringBootApplication
@@ -35,8 +35,11 @@ public class QuickDuckApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuickDuckApplication.class, args);
 	}
-
 }
+
+# 配置application.yml
+mybatis:
+  config-location: classpath:mybatis-config.xml
 ```
 spring boot 启动方式（mybatis-plus）
 ```
@@ -54,6 +57,19 @@ public class QuickDuckApplication {
   }
 
 }
+
+# 配置application.yml
+mybatis-plus:
+  config-location: classpath:mybatis-config.xml
+```
+配置拦截器`mybatis-config.xml`
+```
+ <plugins>
+    <!-- 分页 -->
+    <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    <!-- 查询方法 -->
+    <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
+ </plugins>
 ```
 spring mvc启动方式
 ```
@@ -61,13 +77,6 @@ spring mvc启动方式
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>
-```
-配置拦截器`mybatis-config.xml`
-```
- <plugins>
-      <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
-      <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
- </plugins>
 ```
 配置拦截器`spring xml`
 ```
