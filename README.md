@@ -77,9 +77,8 @@ spring mvc启动方式
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>
-```
-配置拦截器`spring xml`
-```
+
+# 配置拦截器
 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
    <property name="plugins">
     <array>
