@@ -62,7 +62,7 @@ public class QuickDuckApplication {
 mybatis-plus:
   config-location: classpath:mybatis-config.xml
 ```
-配置拦截器`mybatis-config.xml`
+配置拦截器`mybatis-config.xml`（放在`src/main/resources`下）
 ```
  <plugins>
     <!-- 分页 -->
