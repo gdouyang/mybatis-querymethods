@@ -13,8 +13,8 @@ tkmapper版本
     <version>4.1.5</version>
 </dependency>
 ```
-
-使用方式 <https://mvnrepository.com/artifact/com.github.gdouyang/mybatis-querymethods>
+地址：`https://mvnrepository.com/artifact/com.github.gdouyang/mybatis-querymethods`
+## 使用方式
 ```
 <dependency>
     <groupId>com.github.gdouyang</groupId>
@@ -23,7 +23,7 @@ tkmapper版本
 </dependency>
 ```
 
-spring boot 启动方式（tkmapper）
+### spring boot 启动方式（tkmapper）
 ```
 @tk.mybatis.spring.annotation.MapperScan(
 		factoryBean = querymethods.tkmapper.QueryMethodsMapperFactoryBean.class
@@ -41,7 +41,7 @@ public class QuickDuckApplication {
 mybatis:
   config-location: classpath:mybatis-config.xml
 ```
-spring boot 启动方式（mybatis-plus）
+### spring boot 启动方式（mybatis-plus）
 ```
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -71,7 +71,7 @@ mybatis-plus:
     <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
  </plugins>
 ```
-spring mvc启动方式
+### spring mvc启动方式
 ```
 <bean class="querymethods.tkmapper.MapperScannerConfigurer">
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
@@ -88,7 +88,7 @@ spring mvc启动方式
    </property>
 </bean>
 ```
-
+### 样例
 在Mapper使用`Select`注解，给空字符串， 没有注解的需要在xml文件中配置
 ```
 public interface CustomerMapper extends Mapper<Customer> {
