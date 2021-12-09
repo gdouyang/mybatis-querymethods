@@ -23,7 +23,7 @@ tkmapper版本
 </dependency>
 ```
 
-### spring boot 启动方式（tkmapper）
+### spring boot方式（tkmapper）
 ```
 @tk.mybatis.spring.annotation.MapperScan(
 		factoryBean = querymethods.tkmapper.QueryMethodsMapperFactoryBean.class
@@ -41,7 +41,7 @@ public class QuickDuckApplication {
 mybatis:
   config-location: classpath:mybatis-config.xml
 ```
-### spring boot 启动方式（mybatis-plus）
+### spring boot方式（mybatis-plus）
 ```
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -62,16 +62,24 @@ public class QuickDuckApplication {
 mybatis-plus:
   config-location: classpath:mybatis-config.xml
 ```
-配置拦截器`mybatis-config.xml`（放在`src/main/resources`下）
+`mybatis-config.xml`配置（放在`src/main/resources`下）
 ```
- <plugins>
-    <!-- 分页 -->
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  
+  <plugins>
+    <!-- 分页插件 -->
     <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
-    <!-- 查询方法 -->
+    <!-- 查询方法插件 -->
     <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
  </plugins>
+  
+</configuration>
 ```
-### spring mvc启动方式
+### spring mvc方式（tkmapper）
 ```
 <bean class="querymethods.tkmapper.MapperScannerConfigurer">
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
