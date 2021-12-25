@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +29,7 @@ import querymethods.util.MetaObjectUtil;
 public class ResultMapUtil {
   public static final Pattern DELIMITER = Pattern.compile("^[`\\[\"]?(.*?)[`\\]\"]?$");
 
-  private static Map<String, ResultMap> cache = new HashMap<>();
+  private static Map<String, ResultMap> cache = new ConcurrentHashMap<>();
 
   public static void setResultType(MappedStatement ms, TableInfo tableInfo) {
     List<ResultMap> resultMaps = new ArrayList<ResultMap>();

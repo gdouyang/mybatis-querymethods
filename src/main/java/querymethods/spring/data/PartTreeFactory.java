@@ -1,7 +1,7 @@
 package querymethods.spring.data;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import querymethods.spring.data.query.parser.PartTree;
 
@@ -15,7 +15,7 @@ public class PartTreeFactory {
 	private PartTreeFactory() {
 	}
 	
-	static Map<String, PartTree> cache = new HashMap<>();
+	static Map<String, PartTree> cache = new ConcurrentHashMap<>();
 	
 	/**
 	 * 创建PartTree并缓存起来
@@ -27,8 +27,11 @@ public class PartTreeFactory {
 		if(cache.containsKey(msId)) {
 			return cache.get(msId);
 		}
-		PartTree partTree = new PartTree(methodName);
-		cache.put(msId, partTree);
+		PartTree partTree = null;
+		synchronized (PartTreeFactory.class) {
+			partTree = new PartTree(methodName);
+			cache.put(msId, partTree);
+		}
 		
 		return partTree;
 	}

@@ -1,6 +1,10 @@
 package querymethods.mybatisplus;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import org.apache.ibatis.binding.MapperMethod.ParamMap;
@@ -17,7 +21,12 @@ import querymethods.spring.data.query.parser.Part;
 import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
+import querymethods.util.IfThen;
 import querymethods.util.MsIdUtil;
+import tk.mybatis.mapper.MapperException;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.OrderBy;
+import tk.mybatis.mapper.util.StringUtil;
 
 /**
  * where条件构建类 参考spring data PredicateBuilder
@@ -46,7 +55,6 @@ public class MybatisPlusWhereFactory {
     PartTree tree = PartTreeFactory.create(msId, methodName);
 
     QueryWrapper<?> wrapper = new QueryWrapper();
-    wrapper.getSqlSelect();
     TableInfo tbInfo = MybatisPlusUtil.getTableInfo(entityClass);
     MPTableInfo tableInfo = MybatisPlusUtil.getMPTableInfo(entityClass);
 
@@ -81,6 +89,96 @@ public class MybatisPlusWhereFactory {
     ParamMap<Object> pm = new ParamMap<>();
     pm.put(Constants.WRAPPER, wrapper);
     return pm;
+  }
+  
+  /**
+   * 根据方法名和参数填充example
+   * @param methodName
+   * @param example
+   * @param param
+   */
+  public static void fillExample(String methodName, QueryWrapper<?> wrapper, Map<String, Object> param) {
+    Object entity = wrapper.getEntity();
+    if (entity == null) {
+      throw new IllegalArgumentException("field entity in QueryWrapper must not be null! [" + methodName + "]");
+    }
+    Class<? extends Object> entityClass = entity.getClass();
+    TableInfo tbInfo = MybatisPlusUtil.getTableInfo(entityClass);
+    MPTableInfo tableInfo = MybatisPlusUtil.getMPTableInfo(entityClass);
+
+    PartTree tree = new PartTree(methodName);
+    String sqlSelect = Constants.EMPTY;
+    if (tree.isDistinct()) {
+      sqlSelect = " distinct ";
+    }
+
+    String queryProperty = tree.getQueryProperty();
+    if (StringUtils.isNotBlank(queryProperty)) {
+      sqlSelect += tableInfo.getColumnByProperty(queryProperty);
+    } else if (tree.isDistinct()) {
+      sqlSelect += tbInfo.getAllSqlSelect();
+    }
+
+    if (!Constants.EMPTY.equals(sqlSelect)) {
+      wrapper.select(sqlSelect);
+    }
+
+    Queue<Object> args = new LinkedList<>();
+    int index = 0;
+    for (OrPart node : tree) {
+      if (index == 0) {
+        for (Part part : node) {
+          if (!setArgs(part, param, args)) {
+            continue;
+          }
+          build(part, wrapper, args, tableInfo, methodName);
+        }
+      } else {
+        wrapper.or(i -> {
+          for (Part part : node) {
+            if (!setArgs(part, param, args)) {
+              continue;
+            }
+            build(part, i, args, tableInfo, methodName);
+          }
+        });
+      }
+      index++;
+    }
+
+    Sort sort = tree.getSort();
+    if (sort != null) {
+      for (Sort.Order order : sort) {
+        if (order.isAscending()) {
+          wrapper.orderByAsc(order.getProperty());
+        } else {
+          wrapper.orderByDesc(order.getProperty());
+        }
+      }
+    }
+  }
+  
+  private static boolean setArgs(Part part, Map<String, Object> param, Queue<Object> args) {
+    Type type = part.getType();
+    boolean converted = (type != Type.IS_NOT_NULL && type != Type.IS_NULL 
+                         && type != Type.TRUE && type != Type.FALSE);
+    if (converted) {
+      PropertyPath pp = part.getProperty();
+      String fieldName = pp.getSegment();
+      Object object = param.get(fieldName);
+      if (IfThen.isEmpty(object)) {
+        return false;
+      }
+      if (object != null && object.getClass().isArray()) {
+        List<Object> list = Arrays.asList(object);
+        args.addAll(list);
+      } else if (object instanceof Collection) {
+        args.addAll((Collection)object);
+      } else {
+        args.add(object);
+      }
+    }
+    return true;
   }
 
   private static void build(Queue<Object> params, PartTree tree, QueryWrapper<?> wrapper,

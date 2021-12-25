@@ -2,13 +2,13 @@ package querymethods.mybatisplus;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 
 public class MPTableInfo {
 
-  private Map<String, String> map = new HashMap<>();
+  private Map<String, String> map = new ConcurrentHashMap<>();
 
   public MPTableInfo() {
 

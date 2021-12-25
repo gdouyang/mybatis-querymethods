@@ -4,7 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import querymethods.QueryMethodsConfig;
 import querymethods.QueryMethodsException;
 
@@ -18,9 +18,9 @@ public class MsIdUtil {
 
   private MsIdUtil() {}
 
-  private static Map<String, String> cacheMethodName = new HashMap<>();
-  private static Map<String, Class<?>> cacheMapperClass = new HashMap<>();
-  private static Map<String, Class<?>> cacheEntityClass = new HashMap<>();
+  private static Map<String, String> cacheMethodName = new ConcurrentHashMap<>();
+  private static Map<String, Class<?>> cacheMapperClass = new ConcurrentHashMap<>();
+  private static Map<String, Class<?>> cacheEntityClass = new ConcurrentHashMap<>();
 
   /**
    * 根据msId来获取对应的方法名

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.mapping.MappedStatement;
@@ -22,7 +23,7 @@ import querymethods.spring.data.query.parser.PartTree.OrPart;
 
 public class MybatisPlusUtil {
 
-  public static Map<Class<?>, MPTableInfo> map = new HashMap<>();
+  public static Map<Class<?>, MPTableInfo> map = new ConcurrentHashMap<>();
 
   public static MPTableInfo getMPTableInfo(Class<?> entityClass) {
     return map.get(entityClass);

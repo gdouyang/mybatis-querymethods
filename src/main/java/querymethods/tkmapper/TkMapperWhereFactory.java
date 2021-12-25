@@ -1,10 +1,13 @@
 package querymethods.tkmapper;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
@@ -12,6 +15,7 @@ import querymethods.spring.data.query.parser.Part;
 import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
+import querymethods.util.IfThen;
 import querymethods.util.MsIdUtil;
 import tk.mybatis.mapper.MapperException;
 import tk.mybatis.mapper.entity.Example;
@@ -76,6 +80,63 @@ public class TkMapperWhereFactory {
       }
     }
     return example;
+  }
+  
+  /**
+   * 根据方法名和参数填充example
+   * @param methodName
+   * @param example
+   * @param param
+   */
+  public static void fillExample(String methodName, Example example, Map<String, Object> param) {
+	PartTree tree = new PartTree(methodName);
+	example.setDistinct(tree.isDistinct());
+    if (StringUtil.isNotEmpty(tree.getQueryProperty())) {
+      example.selectProperties(tree.getQueryProperty());
+    }
+    try {
+      Example.Criteria criteria = example.createCriteria();
+      Queue<Object> args = new LinkedList<>();
+      for (OrPart node : tree) {
+        for (Part part : node) {
+          Type type = part.getType();
+          boolean converted = (type != Type.IS_NOT_NULL && type != Type.IS_NULL 
+                               && type != Type.TRUE && type != Type.FALSE);
+          if (converted) {
+            PropertyPath pp = part.getProperty();
+            String fieldName = pp.getSegment();
+            Object object = param.get(fieldName);
+            if (IfThen.isEmpty(object)) {
+              continue;
+            }
+            if (object != null && object.getClass().isArray()) {
+              List<Object> list = Arrays.asList(object);
+              args.addAll(list);
+            } else if (object instanceof Collection) {
+              args.addAll((Collection)object);
+            } else {
+              args.add(object);
+            }
+          }
+          build(part, criteria, args, methodName);
+        }
+        criteria = example.createCriteria();
+        example.or(criteria);
+      }
+    } catch (MapperException e) {
+      throw new MapperException(e.getMessage() + " -> " + methodName, e);
+    }
+    Sort sort = tree.getSort();
+    if (sort != null) {
+      for (Sort.Order order : sort) {
+        OrderBy orderBy = example.orderBy(order.getProperty());
+        if (order.isAscending()) {
+          orderBy.asc();
+        } else {
+          orderBy.desc();
+        }
+      }
+    }
   }
 
   /**

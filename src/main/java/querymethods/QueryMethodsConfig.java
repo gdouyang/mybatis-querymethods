@@ -23,7 +23,7 @@ public class QueryMethodsConfig {
   /**
    * mapper父接口
    */
-  private static List<Class<?>> mapperClasss = new ArrayList<>();
+  private static volatile List<Class<?>> mapperClasss = new ArrayList<>();
 
   /**
    * 当前ORM，默认为tkmapper，可以使用setOrmType设置
@@ -53,15 +53,17 @@ public class QueryMethodsConfig {
    */
   public static List<Class<?>> getMapperClasss() {
     if (mapperClasss.isEmpty()) {
-      Class<?> clazz = QueryMethodsConfig.getTkMapperBaseMapperClass();
-      if (clazz != null) {
-        setOrmType(ORM_TYPE_TKMAPPER);
-        mapperClasss.add(clazz);
-      } else {
-        clazz = QueryMethodsConfig.getMybatisPlusBaseMapperClass();
+      synchronized (QueryMethodsConfig.class) {
+        Class<?> clazz = QueryMethodsConfig.getTkMapperBaseMapperClass();
         if (clazz != null) {
-          setOrmType(ORM_TYPE_MYBATISPLUS);
+          setOrmType(ORM_TYPE_TKMAPPER);
           mapperClasss.add(clazz);
+        } else {
+          clazz = QueryMethodsConfig.getMybatisPlusBaseMapperClass();
+          if (clazz != null) {
+            setOrmType(ORM_TYPE_MYBATISPLUS);
+            mapperClasss.add(clazz);
+          }
         }
       }
     }
@@ -75,7 +77,9 @@ public class QueryMethodsConfig {
    */
   public static void setMapperClasss(List<Class<?>> mapperClasss) {
     if (mapperClasss == null) {
-      mapperClasss = new ArrayList<>();
+      synchronized (QueryMethodsConfig.class) {
+        mapperClasss = new ArrayList<>();
+      }
     }
     QueryMethodsConfig.mapperClasss = mapperClasss;
   }

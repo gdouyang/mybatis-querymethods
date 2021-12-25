@@ -6,7 +6,7 @@ import static org.apache.ibatis.mapping.SqlCommandType.SELECT;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
@@ -34,9 +34,9 @@ public class QueryMethodsHelper {
 
   private QueryMethodsHelper() {}
 
-  private static final Map<String, Boolean> queryMethod = new HashMap<>();
+  private static final Map<String, Boolean> queryMethod = new ConcurrentHashMap<>();
 
-  private static final Map<String, Boolean> deleteMethod = new HashMap<>();
+  private static final Map<String, Boolean> deleteMethod = new ConcurrentHashMap<>();
 
   public static boolean isQueryMethod(String msId) {
     return queryMethod.containsKey(msId);
