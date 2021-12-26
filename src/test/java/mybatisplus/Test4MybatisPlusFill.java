@@ -26,8 +26,8 @@ public class Test4MybatisPlusFill extends BaseTest {
   public void test() {
     SqlSession session = sqlSessionFactory.openSession();
 
+    CustomerMapperMp mapper = session.getMapper(CustomerMapperMp.class);
     try {
-      CustomerMapperMp mapper = session.getMapper(CustomerMapperMp.class);
       QueryMethodsTest.log("deleteById");
       int id = 1;
       mapper.deleteById(id);
@@ -37,12 +37,23 @@ public class Test4MybatisPlusFill extends BaseTest {
       b.setId(id);
       b.setFirstName("OY");
       b.setLastName("GD");
+      b.setActive(false);
+      mapper.insert(b);
+      
+      b = new Customer();
+      b.setId(2);
+      b.setFirstName("OY-aa");
+      b.setLastName("GD-aa");
+      b.setActive(false);
       mapper.insert(b);
       
       test(mapper);
 
       mapper.deleteById(id);
     } finally {
+      QueryMethodsTest.log("delete all");
+      mapper.deleteByMap(new HashMap<>());
+      
       session.commit();
       session.close();
     }

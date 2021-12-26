@@ -25,9 +25,9 @@ public class Test4TkMapperFill extends BaseTest {
   public void test() {
     SqlSession session = sqlSessionFactory.openSession();
 
+    CustomerMapper mapper = session.getMapper(CustomerMapper.class);
     try {
       Integer id = 1;
-      CustomerMapper mapper = session.getMapper(CustomerMapper.class);
       QueryMethodsTest.log("deleteByPrimaryKey");
       mapper.deleteByPrimaryKey(id);
 
@@ -36,14 +36,22 @@ public class Test4TkMapperFill extends BaseTest {
       b.setId(id);
       b.setFirstName("OY");
       b.setLastName("GD");
+      b.setActive(false);
       mapper.insert1(b);
       
-      test(mapper);
+      b = new Customer();
+      b.setId(2);
+      b.setFirstName("OY-aa");
+      b.setLastName("GD-aa");
+      b.setActive(false);
+      mapper.insert(b);
       
-      QueryMethodsTest.log("deleteByPrimaryKey");
-      mapper.deleteByPrimaryKey(id);
+      test(mapper);
 
     } finally {
+      QueryMethodsTest.log("delete all");
+      mapper.delete(new Customer());
+      
       session.commit();
       session.close();
     }
