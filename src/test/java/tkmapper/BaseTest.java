@@ -24,7 +24,7 @@ public class BaseTest {
   @Before
   public void before() {
 
-    String resource = "mybatis-config.xml";
+    String resource = "mybatis-config-tk.xml";
     try {
       InputStream inputStream = Resources.getResourceAsStream(resource);
       sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);

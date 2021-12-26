@@ -29,7 +29,7 @@ public class Test4TkMapperError {
     QueryMethodsException e = null;
     SqlSessionFactory sqlSessionFactory = null;
     try {
-      String resource = "mybatis-config-error.xml";
+      String resource = "mybatis-config-tk-error.xml";
       try {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);

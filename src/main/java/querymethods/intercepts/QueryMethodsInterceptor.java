@@ -61,6 +61,9 @@ public class QueryMethodsInterceptor implements Interceptor {
     }
     return invocation.proceed();
   }
+  
+  static final String regex = "^param(\\d)+$";
+  static final String regex2 = "^arg(\\d)+$";
 
   private Object getExample(String msId, Object parameter) throws ClassNotFoundException {
     Queue<Object> params = new LinkedList<>();
@@ -68,11 +71,10 @@ public class QueryMethodsInterceptor implements Interceptor {
       @SuppressWarnings("unchecked")
       ParamMap<Object> pm = (ParamMap<Object>) parameter;
 
-      String regex = "^param(\\d)+$";
       String[] keys = pm.keySet().toArray(new String[] {});
       Arrays.sort(keys);
       for (String key : keys) {
-        if (key.matches(regex)) {
+        if (key.matches(regex) || key.matches(regex2)) {
           params.add(pm.get(key));
         }
       }

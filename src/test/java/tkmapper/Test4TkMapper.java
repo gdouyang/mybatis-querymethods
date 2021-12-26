@@ -17,9 +17,9 @@ public class Test4TkMapper extends BaseTest {
     SqlSession session = sqlSessionFactory.openSession();
 
     try {
+      Integer id = 1;
       CustomerMapper mapper = session.getMapper(CustomerMapper.class);
 
-      Integer id = 1;
       QueryMethodsTest.log("deleteByPrimaryKey");
       mapper.deleteByPrimaryKey(id);
 

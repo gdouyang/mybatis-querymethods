@@ -88,7 +88,14 @@ public class TkMapperWhereFactory {
    * @param example
    * @param param
    */
-  public static void fillExample(String methodName, Example example, Map<String, Object> param) {
+  public static Example createExample(String methodName, Class entityClass, Map<String, Object> param) {
+    if (StringUtil.isEmpty(methodName)) {
+      throw new IllegalArgumentException("methodName must not be empty! [" + methodName + "]");
+    }
+    if (entityClass == null) {
+      throw new IllegalArgumentException("entityClass must not be null! [" + methodName + "]");
+    }
+    Example example = new Example(entityClass);
 	PartTree tree = new PartTree(methodName);
 	example.setDistinct(tree.isDistinct());
     if (StringUtil.isNotEmpty(tree.getQueryProperty())) {
@@ -109,11 +116,15 @@ public class TkMapperWhereFactory {
             if (IfThen.isEmpty(object)) {
               continue;
             }
-            if (object != null && object.getClass().isArray()) {
-              List<Object> list = Arrays.asList(object);
-              args.addAll(list);
-            } else if (object instanceof Collection) {
-              args.addAll((Collection)object);
+            if (type == Type.BETWEEN) {
+              if (object != null && object.getClass().isArray()) {
+                List<Object> list = Arrays.asList((Object[])object);
+                args.addAll(list);
+              } else if (object instanceof Collection) {
+                args.addAll((Collection)object);
+              } else {
+                args.add(object);
+              } 
             } else {
               args.add(object);
             }
@@ -137,6 +148,7 @@ public class TkMapperWhereFactory {
         }
       }
     }
+    return example;
   }
 
   /**
@@ -223,6 +235,13 @@ public class TkMapperWhereFactory {
       throw new IllegalArgumentException("Value must not be null! [" + property + " -> " + msId + "]");
     }
     return param;
+  }
+  
+  public static void main(String[] args) {
+    Integer[] array = new Integer[] {1,2};
+    Object obj = array;
+    List asList = Arrays.asList((Object[])obj);
+    System.out.println(asList);
   }
 
 }

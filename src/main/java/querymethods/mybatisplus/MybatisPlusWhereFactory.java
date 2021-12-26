@@ -97,12 +97,15 @@ public class MybatisPlusWhereFactory {
    * @param example
    * @param param
    */
-  public static void fillExample(String methodName, QueryWrapper<?> wrapper, Map<String, Object> param) {
-    Object entity = wrapper.getEntity();
-    if (entity == null) {
-      throw new IllegalArgumentException("field entity in QueryWrapper must not be null! [" + methodName + "]");
+  public static <T> QueryWrapper<T> createQueyWrapper(String methodName, Class<T> entityClass, Map<String, Object> param) {
+    if (StringUtil.isEmpty(methodName)) {
+      throw new IllegalArgumentException("methodName must not be empty! [" + methodName + "]");
     }
-    Class<? extends Object> entityClass = entity.getClass();
+    if (entityClass == null) {
+      throw new IllegalArgumentException("entityClass must not be null! [" + methodName + "]");
+    }
+    QueryWrapper<T> wrapper = new QueryWrapper<>();
+    wrapper.setEntityClass(entityClass);
     TableInfo tbInfo = MybatisPlusUtil.getTableInfo(entityClass);
     MPTableInfo tableInfo = MybatisPlusUtil.getMPTableInfo(entityClass);
 
@@ -156,6 +159,7 @@ public class MybatisPlusWhereFactory {
         }
       }
     }
+    return wrapper;
   }
   
   private static boolean setArgs(Part part, Map<String, Object> param, Queue<Object> args) {
@@ -169,11 +173,15 @@ public class MybatisPlusWhereFactory {
       if (IfThen.isEmpty(object)) {
         return false;
       }
-      if (object != null && object.getClass().isArray()) {
-        List<Object> list = Arrays.asList(object);
-        args.addAll(list);
-      } else if (object instanceof Collection) {
-        args.addAll((Collection)object);
+      if (type == Type.BETWEEN) {
+        if (object != null && object.getClass().isArray()) {
+          List<Object> list = Arrays.asList((Object[])object);
+          args.addAll(list);
+        } else if (object instanceof Collection) {
+          args.addAll((Collection)object);
+        } else {
+          args.add(object);
+        } 
       } else {
         args.add(object);
       }
