@@ -1,1 +1,1 @@
-mybatis.join.processer.QueryEntityProcesser
+mybatis.join.processer.TkMapperQueryEntityProcesser

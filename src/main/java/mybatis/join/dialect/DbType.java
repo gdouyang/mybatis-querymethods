@@ -15,7 +15,6 @@
  */
 package mybatis.join.dialect;
 
-
 public enum DbType {
 
     /**
@@ -191,6 +190,14 @@ public enum DbType {
         this.name = name;
         this.remarks = remarks;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
 
 
 }
