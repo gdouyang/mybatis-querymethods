@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import querymethods.spring.data.util.Assert;
 import querymethods.spring.data.util.ObjectUtils;
 import querymethods.spring.data.util.StringUtils;

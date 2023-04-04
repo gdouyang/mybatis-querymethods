@@ -2,7 +2,6 @@ package querymethods.spring.data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import querymethods.spring.data.query.parser.PartTree;
 
 /**

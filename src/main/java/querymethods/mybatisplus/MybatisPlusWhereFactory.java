@@ -13,19 +13,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-
 import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part;
-import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree;
+import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.util.IfThen;
 import querymethods.util.MsIdUtil;
-import tk.mybatis.mapper.MapperException;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.OrderBy;
 import tk.mybatis.mapper.util.StringUtil;
 
 /**
@@ -79,10 +75,11 @@ public class MybatisPlusWhereFactory {
     Sort sort = tree.getSort();
     if (sort != null) {
       for (Sort.Order order : sort) {
+        String column = tableInfo.getColumnByProperty(order.getProperty());
         if (order.isAscending()) {
-          wrapper.orderByAsc(order.getProperty());
+          wrapper.orderByAsc(column);
         } else {
-          wrapper.orderByDesc(order.getProperty());
+          wrapper.orderByDesc(column);
         }
       }
     }

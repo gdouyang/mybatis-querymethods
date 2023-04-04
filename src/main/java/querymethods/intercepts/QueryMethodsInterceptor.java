@@ -16,7 +16,6 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.defaults.DefaultSqlSession.StrictMap;
-
 import querymethods.QueryMethodsConfig;
 import querymethods.QueryMethodsException;
 import querymethods.QueryMethodsHelper;
@@ -29,6 +28,7 @@ import querymethods.tkmapper.TkMapperWhereFactory;
  * @author OYGD
  *
  */
+@SuppressWarnings("deprecation")
 @Intercepts({
     @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
         RowBounds.class, ResultHandler.class}),

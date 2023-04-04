@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.domain.Sort.Direction;

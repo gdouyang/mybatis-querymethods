@@ -12,8 +12,8 @@ import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part;
-import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree;
+import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree.OrPart;
 import querymethods.util.IfThen;
 import querymethods.util.MsIdUtil;
@@ -88,6 +88,7 @@ public class TkMapperWhereFactory {
    * @param example
    * @param param
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public static Example createExample(String methodName, Class entityClass, Map<String, Object> param) {
     if (StringUtil.isEmpty(methodName)) {
       throw new IllegalArgumentException("methodName must not be empty! [" + methodName + "]");
@@ -237,11 +238,4 @@ public class TkMapperWhereFactory {
     return param;
   }
   
-  public static void main(String[] args) {
-    Integer[] array = new Integer[] {1,2};
-    Object obj = array;
-    List asList = Arrays.asList((Object[])obj);
-    System.out.println(asList);
-  }
-
 }

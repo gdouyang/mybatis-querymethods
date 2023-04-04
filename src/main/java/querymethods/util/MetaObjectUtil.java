@@ -24,7 +24,6 @@ package querymethods.util;
 import java.lang.reflect.Method;
 
 import org.apache.ibatis.reflection.MetaObject;
-
 import querymethods.QueryMethodsException;
 
 /**

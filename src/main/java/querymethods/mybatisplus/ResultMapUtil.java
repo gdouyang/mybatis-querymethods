@@ -3,7 +3,6 @@ package querymethods.mybatisplus;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +21,6 @@ import org.apache.ibatis.type.TypeHandler;
 
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
-
 import querymethods.QueryMethodsException;
 import querymethods.util.MetaObjectUtil;
 

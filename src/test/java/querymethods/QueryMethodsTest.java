@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.util.Assert;
+import querymethods.mapper.QueryMethodsMapper;
 
 public class QueryMethodsTest {
   public static void test(QueryMethodsMapper mapper, Customer b) {
@@ -18,24 +19,31 @@ public class QueryMethodsTest {
     Integer countById = mapper.countById(null);
     assertEquals(countById, Integer.valueOf(0));
 
-    log("findByIdOrFirstName");
-    Customer customer = mapper.findByIdOrFirstName(null, "OY1");
-    assertNull(customer);
-
-    log("findByIdOrFirstName");
-    customer = mapper.findByIdOrFirstName(id, "OY1");
-    assertTrue(customer != null);
-//
-    log("countById not empty");
-    countById = mapper.countById(id);
-    assertTrue(countById != 0);
-//        
+    Customer customer = null;
     log("findByIdAndFirstName");
     customer = mapper.findByIdAndFirstName(b.getId(), b.getFirstName());
     assertTrue(customer != null);
+    
+    log("findByIdOrFirstName");
+    customer = mapper.findByIdOrFirstName(null, "OY1");
+    assertNull(customer);
+
+    
+    log("findById");
+    customer = mapper.findById(b.getId());
+    assertTrue(customer != null);
+    
+    log("countById");
+    countById = mapper.countById(id);
+    assertTrue(countById != 0);
 
     log("findByFirstNameOrderByIdAsc");
     List<Customer> list = mapper.findByFirstNameOrderByIdAsc(b.getFirstName());
+    assertTrue(list != null && list.size() > 0);
+    assertNotNull(list.get(0));
+    
+    log("findByFirstNameOrderByCreateTimeAsc");
+    list = mapper.findByFirstNameOrderByCreateTimeAsc(b.getFirstName());
     assertTrue(list != null && list.size() > 0);
     assertNotNull(list.get(0));
 
@@ -43,6 +51,29 @@ public class QueryMethodsTest {
     list = mapper.findByFirstNameStartingWith(b.getFirstName());
     assertTrue(list != null && list.size() > 0);
     assertNotNull(list.get(0));
+    
+    log("findByFirstNameEndingWith");
+    list = mapper.findByFirstNameEndingWith(b.getFirstName());
+    assertTrue(list != null && list.size() > 0);
+    assertNotNull(list.get(0));
+    
+    log("findByFirstNameContaining");
+    list = mapper.findByFirstNameContaining(b.getFirstName());
+    assertTrue(list != null && list.size() > 0);
+    assertNotNull(list.get(0));
+    
+    log("findByFirstNameNotContaining");
+    list = mapper.findByFirstNameNotContaining(b.getFirstName());
+    assertTrue(list != null && list.size() == 0);
+    
+    log("findByFirstNameLike");
+    list = mapper.findByFirstNameLike(b.getFirstName());
+    assertTrue(list != null && list.size() > 0);
+    assertNotNull(list.get(0));
+    
+    log("findByFirstNameNotLike");
+    list = mapper.findByFirstNameNotLike(b.getFirstName());
+    assertTrue(list != null && list.size() == 0);
 
     log("findByIdInOrId");
     List<Integer> asList = Arrays.asList(id, 2, 3);
@@ -54,6 +85,18 @@ public class QueryMethodsTest {
     list = mapper.findByIdIn(asList);
     assertTrue(list != null && list.size() > 0);
     assertNotNull(list.get(0));
+    
+    log("findByIdNotIn");
+    list = mapper.findByIdNotIn(asList);
+    Assert.isTrue(list != null && list.size() == 0, "错误");
+    
+    log("findByIdIsNull");
+    list = mapper.findByIdIsNull();
+    Assert.isTrue(list != null && list.size() == 0, "错误");
+    
+    log("findByIdIsNotNull");
+    list = mapper.findByIdIsNotNull();
+    Assert.isTrue(list != null && list.size() > 0, "错误");
     
     log("findByActiveTrue");
     list = mapper.findByActiveTrue();
@@ -78,17 +121,15 @@ public class QueryMethodsTest {
     log("findByIdBefore");
     list = mapper.findByIdBefore(2);
     Assert.isTrue(list != null && list.size() > 0, "错误");
-    log("findByIdBefore");
+    
+    log("findByIdLessThan");
     list = mapper.findByIdLessThan(2);
     Assert.isTrue(list != null && list.size() > 0, "错误");
-    log("findByIdBefore");
+    
+    log("findByIdLessThanEqual");
     list = mapper.findByIdLessThanEqual(2);
     Assert.isTrue(list != null && list.size() > 0, "错误");
     
-    log("findByIdNotIn");
-    list = mapper.findByIdNotIn(asList);
-    Assert.isTrue(list != null && list.size() == 0, "错误");
-
     log("findFirstNameById");
     String firstName = mapper.findFirstNameById(id);
     assertEquals("OY", firstName);
@@ -98,7 +139,11 @@ public class QueryMethodsTest {
     assertEquals("OY", firstName);
 
     log("deleteByFirstNameAndId");
-    int num = mapper.deleteByFirstNameAndId(b.getFirstName(), id);
+    int num = mapper.deleteByFirstName("test");
+    assertEquals(0, num);
+    
+    log("deleteByFirstNameAndId");
+    num = mapper.deleteByFirstNameAndId(b.getFirstName(), id);
     assertEquals(1, num);
   }
 

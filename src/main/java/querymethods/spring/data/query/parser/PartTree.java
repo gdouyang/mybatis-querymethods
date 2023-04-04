@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part.Type;
 import querymethods.spring.data.query.parser.PartTree.OrPart;

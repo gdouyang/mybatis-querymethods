@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.util.Assert;
 import querymethods.spring.data.util.StringUtils;

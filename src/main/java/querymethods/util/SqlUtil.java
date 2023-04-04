@@ -1,7 +1,6 @@
 package querymethods.util;
 
 import org.apache.ibatis.mapping.MappedStatement;
-
 import querymethods.QueryMethodsConfig;
 import querymethods.mybatisplus.MybatisPlusUtil;
 import querymethods.spring.data.PartTreeFactory;

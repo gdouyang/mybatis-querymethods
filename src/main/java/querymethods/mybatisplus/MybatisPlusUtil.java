@@ -1,6 +1,5 @@
 package querymethods.mybatisplus;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +13,6 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-
 import querymethods.spring.data.mapping.PropertyPath;
 import querymethods.spring.data.query.domain.Sort;
 import querymethods.spring.data.query.parser.Part;
@@ -62,9 +60,9 @@ public class MybatisPlusUtil {
     }
 
     SqlMethod sqlMethod = SqlMethod.SELECT_MAPS;
-    String sql =
-        String.format(sqlMethod.getSql(), u.sqlFirst(), u.sqlSelectColumns(tableInfo, true),
-            tableInfo.getTableName(), u.sqlWhereEntityWrapper(true, tableInfo), u.sqlComment());
+    String sql = String.format(sqlMethod.getSql(), u.sqlFirst(),
+        u.sqlSelectColumns(tableInfo, true), tableInfo.getTableName(),
+        u.sqlWhereEntityWrapper(true, tableInfo), u.sqlOrderBy(tableInfo), u.sqlComment());
 
     return sql.toString();
   }
@@ -75,6 +73,7 @@ public class MybatisPlusUtil {
    * @param ms
    * @return
    */
+  @SuppressWarnings("deprecation")
   public static String deleteByExample(MappedStatement ms, Class<?> entityClass) {
     TableInfo tableInfo = getTableInfo(entityClass);
     String sql;
@@ -107,7 +106,8 @@ public class MybatisPlusUtil {
 
     for (OrPart node : tree) {
       // 检查查询字段是否为null
-      if (StringUtils.isNotBlank(tree.getQueryProperty()) && !propertys.contains(tree.getQueryProperty())) {
+      if (StringUtils.isNotBlank(tree.getQueryProperty())
+          && !propertys.contains(tree.getQueryProperty())) {
         throw new NoSuchFieldException(String.format("%s -> %s", tree.getQueryProperty(), msId));
       }
       for (Part part : node) {
