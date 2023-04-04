@@ -26,7 +26,7 @@ tkmapper版本
 ### spring boot方式（tkmapper）
 ```
 @tk.mybatis.spring.annotation.MapperScan(
-		factoryBean = querymethods.tkmapper.QueryMethodsMapperFactoryBean.class
+		factoryBean = mybatis.querymethods.tkmapper.QueryMethodsMapperFactoryBean.class
 )
 @EnableTransactionManagement
 @SpringBootApplication
@@ -48,7 +48,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@MapperScan(basePackages = "com.example.demo", factoryBean = querymethods.mybatisplus.QueryMethodsMapperFactoryBean.class)
+@MapperScan(basePackages = "com.example.demo", factoryBean = mybatis.querymethods.mybatisplus.QueryMethodsMapperFactoryBean.class)
 @SpringBootApplication
 public class QuickDuckApplication {
 
@@ -74,14 +74,14 @@ mybatis-plus:
     <!-- 分页插件 -->
     <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
     <!-- 查询方法插件 -->
-    <plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
+    <plugin interceptor="mybatis.querymethods.intercepts.QueryMethodsInterceptor"></plugin>
  </plugins>
   
 </configuration>
 ```
 ### spring mvc方式（tkmapper）
 ```
-<bean class="querymethods.tkmapper.MapperScannerConfigurer">
+<bean class="mybatis.querymethods.tkmapper.MapperScannerConfigurer">
     <property name="basePackage" value="org.mybatis.spring.sample.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 </bean>
@@ -91,7 +91,7 @@ mybatis-plus:
    <property name="plugins">
     <array>
 	<bean class="com.github.pagehelper.PageInterceptor"></bean>
-        <bean class="querymethods.intercepts.QueryMethodsInterceptor"></bean>
+        <bean class="mybatis.querymethods.intercepts.QueryMethodsInterceptor"></bean>
     </array>
    </property>
 </bean>
@@ -182,16 +182,3 @@ public interface CustomerMapper extends Mapper<Customer> {
 }
 ```
 
-```
-CREATE DATABASE IF NOT EXISTS querymethods CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-use querymethods;
-
-DROP TABLE IF EXISTS `customer`;
-CREATE TABLE `customer` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `active` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB;
-```
