@@ -3,6 +3,7 @@ package mybatis.querymethods;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -31,6 +32,10 @@ public class Customer {
 
   @Column(name = "active")
   private Boolean active;
+  
+  @Transient
+  @TableField(exist = false)
+  private String test;
 
   public Integer getId() {
     return id;
@@ -62,6 +67,14 @@ public class Customer {
 
   public void setActive(Boolean active) {
     this.active = active;
+  }
+
+  public String getTest() {
+    return test;
+  }
+	
+  public void setTest(String test) {
+    this.test = test;
   }
 
   @Override
