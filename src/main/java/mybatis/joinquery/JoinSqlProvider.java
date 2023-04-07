@@ -2,11 +2,17 @@ package mybatis.joinquery;
 
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.builder.annotation.ProviderContext;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import mybatis.joinquery.dialect.DialectFactory;
 
 public class JoinSqlProvider {
+	
+	protected final static Log logger = LogFactory.getLog(JoinSqlProvider.class);
 
 	public static final String QUERY = "$$query";
 	public static final String SQL_ARGS = "$$sql_args";
@@ -36,14 +42,18 @@ public class JoinSqlProvider {
         if (queryWrapper == null) {
             throw new IllegalArgumentException("joinQueryWrapper can not be null.");
         }
+        
+        String sql = DialectFactory.getDialect().forSelectListByQuery(queryWrapper);
+        if (logger.isDebugEnabled()) {
+        	logger.debug(sql);
+        }
 
         Map<String, Object> valueMap = queryWrapper.getValueMap();
         if (null != valueMap) {
         	params.putAll(valueMap);
         }
-        System.out.println(params);
-
-        return DialectFactory.getDialect().forSelectListByQuery(queryWrapper);
+        
+        return sql;
     }
 
     /**
@@ -61,12 +71,16 @@ public class JoinSqlProvider {
         	throw new IllegalArgumentException("joinQueryWrapper can not be null.");
         }
 
+        String sql = DialectFactory.getDialect().forSelectCountByQuery(queryWrapper);
+        if (logger.isDebugEnabled()) {
+        	logger.debug(sql);
+        }
+
         Map<String, Object> valueMap = queryWrapper.getValueMap();
         if (null != valueMap) {
         	params.putAll(valueMap);
         }
-
-        return DialectFactory.getDialect().forSelectCountByQuery(queryWrapper);
+        return sql;
     }
 
 

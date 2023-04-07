@@ -17,6 +17,8 @@ import org.junit.Test;
 
 import mybatis.joinquery.JoinQueryWrapper;
 import mybatis.joinquery.dialect.CommonsDialectImpl;
+import mybatis.joinquery.dialect.DbType;
+import mybatis.joinquery.dialect.DialectFactory;
 import mybatis.joinquery.dialect.IDialect;
 import mybatis.joinquery.dialect.KeywordWrap;
 import mybatis.joinquery.dialect.LimitOffsetProcesser;
@@ -26,11 +28,12 @@ public class AccountSqlTester {
 
     @Test
     public void testSelectSql() {
+    	DialectFactory.setHintDbType(DbType.ORACLE);
         JoinQueryWrapper query = new JoinQueryWrapper()
-                .select()
+                .select(Tables.ACCOUNT.AGE.as("a"))
                 .from(Tables.ACCOUNT);
 
-        IDialect dialect = new CommonsDialectImpl();
+        IDialect dialect = DialectFactory.getDialect();
         String sql = dialect.forSelectListByQuery(query);
         System.out.println(sql);
     }

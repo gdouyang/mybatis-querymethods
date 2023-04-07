@@ -3,22 +3,14 @@ package mybatis.joinquery;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
 import org.junit.Test;
-
-import mybatis.joinquery.JoinQueryWrapper;
-import mybatis.joinquery.dialect.CommonsDialectImpl;
-import mybatis.joinquery.dialect.DbType;
-import mybatis.joinquery.dialect.DialectFactory;
-import mybatis.joinquery.dialect.IDialect;
 
 public class BaseTest {
 
@@ -34,8 +26,6 @@ public class BaseTest {
 		try {
 			InputStream inputStream = Resources.getResourceAsStream(resource);
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-			Collection<MappedStatement> mappedStatements = sqlSessionFactory.getConfiguration().getMappedStatements();
-			System.out.println(mappedStatements.size());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -46,7 +36,6 @@ public class BaseTest {
 		SqlSession session = sqlSessionFactory.openSession();
 
 		try {
-			DialectFactory.setHintDbType(DbType.H2);
 			session.getConnection().prepareStatement(
 					"create table if not exists tb_account (id bigint primary key not null, user_name varchar(32),"
 					+ " birthday datetime, sex int, age int, is_normal int, is_delete int);").execute();
@@ -70,11 +59,8 @@ public class BaseTest {
 					.where(Tables.ACCOUNT.AGE.in(10, 11, 12))
 					.having(Tables.ACCOUNT.AGE.between(18, 25))
 					.where(Tables.ACCOUNT.AGE.in(10, 11, 12));
-			IDialect dialect = new CommonsDialectImpl();
-			String sql = dialect.forSelectListByQuery(queryWrapper);
-			System.out.println(sql);
 			List<Account> selectListByQuery = mapper.selectListByQuery(queryWrapper);
-			System.out.println(selectListByQuery);
+			System.out.println("result: " + selectListByQuery);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -83,7 +69,6 @@ public class BaseTest {
 				session.getConnection().prepareStatement("drop table tb_account;").execute();
 				session.getConnection().prepareStatement("drop table tb_article;").execute();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			session.commit();

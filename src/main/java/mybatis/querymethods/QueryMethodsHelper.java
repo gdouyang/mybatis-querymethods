@@ -4,7 +4,6 @@ import static org.apache.ibatis.mapping.SqlCommandType.DELETE;
 import static org.apache.ibatis.mapping.SqlCommandType.SELECT;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
