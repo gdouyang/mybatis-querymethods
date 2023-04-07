@@ -47,7 +47,7 @@ public class QueryCondition implements Serializable {
     protected String logic;
     protected Object value;
     protected boolean effective = true;
-    protected int index = 0;
+    public int index = 0;
 
     //当前条件的上个条件
     protected QueryCondition before;
@@ -130,7 +130,6 @@ public class QueryCondition implements Serializable {
         if (this.next != null) {
             this.next.connect(nextCondition, connector);
         } else {
-        	nextCondition.index = this.index + 1;
             this.next = nextCondition;
             this.connector = connector;
             nextCondition.before = this;
@@ -161,6 +160,7 @@ public class QueryCondition implements Serializable {
         }
 
         if (this.next != null) {
+        	next.index = this.index + 1;
             return sql + next.toSql(queryTables, dialect);
         }
 
@@ -189,21 +189,21 @@ public class QueryCondition implements Serializable {
 
         //between, not between
         else if (LOGIC_BETWEEN.equals(logic) || LOGIC_NOT_BETWEEN.equals(logic)) {
-            sqlBuilder.append(" #{").append(this.index).append("} AND ").append(" #{").append(index).append("} ");
+            sqlBuilder.append(" #{p").append(this.index).append("0").append("} AND ").append(" #{p").append(index + "" + 1).append("} ");
         }
         //in, not in
         else if (LOGIC_IN.equals(logic) || LOGIC_NOT_IN.equals(logic)) {
             int paramsCount = calculateValueArrayCount();
             sqlBuilder.append('(');
             for (int i = 0; i < paramsCount; i++) {
-                sqlBuilder.append(" #{").append(index).append(i).append("} ");
+                sqlBuilder.append(" #{p").append(index).append(i).append("} ");
                 if (i != paramsCount - 1) {
                     sqlBuilder.append(',');
                 }
             }
             sqlBuilder.append(')');
         } else {
-            sqlBuilder.append(" #{").append(this.column.getName()).append("} ");
+            sqlBuilder.append(" #{p").append(index).append("} ");
         }
     }
 

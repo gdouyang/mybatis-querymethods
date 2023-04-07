@@ -67,6 +67,8 @@ public class BaseTest {
 					.from(Tables.ACCOUNT)
 					.leftJoin(Tables.ARTICLE)
 					.on(Tables.ACCOUNT.ID.eq(Tables.ARTICLE.ACCOUNT_ID))
+					.where(Tables.ACCOUNT.AGE.in(10, 11, 12))
+					.having(Tables.ACCOUNT.AGE.between(18, 25))
 					.where(Tables.ACCOUNT.AGE.in(10, 11, 12));
 			IDialect dialect = new CommonsDialectImpl();
 			String sql = dialect.forSelectListByQuery(queryWrapper);

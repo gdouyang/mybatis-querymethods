@@ -21,14 +21,6 @@ public interface IDialect {
 
     String wrap(String keyword);
 
-    String forDeleteById(String tableName, String[] primaryKeys);
-
-    String forDeleteBatchByIds(String tableName, String[] primaryKeys, Object[] ids);
-
-    String forDeleteByQuery(JoinQueryWrapper queryWrapper);
-
-    String forSelectOneById(String tableName, String[] primaryKeys, Object[] primaryValues);
-
     String forSelectListByQuery(JoinQueryWrapper queryWrapper);
 
     String forSelectCountByQuery(JoinQueryWrapper queryWrapper);
@@ -36,9 +28,5 @@ public interface IDialect {
     String buildSelectSql(JoinQueryWrapper queryWrapper);
 
     String buildSelectCountSql(JoinQueryWrapper queryWrapper);
-
-    String buildDeleteSql(JoinQueryWrapper queryWrapper);
-
-    String buildWhereConditionSql(JoinQueryWrapper queryWrapper);
 
 }

@@ -54,75 +54,6 @@ public class CommonsDialectImpl implements IDialect {
     }
 
     @Override
-    public String forDeleteById(String tableName, String[] primaryKeys) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ");
-        sql.append(wrap(tableName));
-        sql.append(" WHERE ");
-        for (int i = 0; i < primaryKeys.length; i++) {
-            if (i > 0) {
-                sql.append(" AND ");
-            }
-            sql.append(wrap(primaryKeys[i])).append(" = ?");
-        }
-        return sql.toString();
-    }
-
-
-    @Override
-    public String forDeleteBatchByIds(String tableName, String[] primaryKeys, Object[] ids) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ");
-        sql.append(wrap(tableName));
-        sql.append(" WHERE ");
-
-        //多主键的场景
-        if (primaryKeys.length > 1) {
-            for (int i = 0; i < ids.length / primaryKeys.length; i++) {
-                if (i > 0) {
-                    sql.append(" OR ");
-                }
-                sql.append("(");
-                for (int j = 0; j < primaryKeys.length; j++) {
-                    if (j > 0) {
-                        sql.append(" AND ");
-                    }
-                    sql.append(wrap(primaryKeys[j])).append(" = ?");
-                }
-                sql.append(")");
-            }
-        }
-        // 单主键
-        else {
-            for (int i = 0; i < ids.length; i++) {
-                if (i > 0) {
-                    sql.append(" OR ");
-                }
-                sql.append(wrap(primaryKeys[0])).append(" = ?");
-            }
-        }
-        return sql.toString();
-    }
-
-    @Override
-    public String forDeleteByQuery(JoinQueryWrapper queryWrapper) {
-        return buildDeleteSql(queryWrapper);
-    }
-
-    @Override
-    public String forSelectOneById(String tableName, String[] primaryKeys, Object[] primaryValues) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM ");
-        sql.append(wrap(tableName)).append(" WHERE ");
-        for (int i = 0; i < primaryKeys.length; i++) {
-            if (i > 0) {
-                sql.append(" AND ");
-            }
-            sql.append(wrap(primaryKeys[i])).append(" = ?");
-        }
-        return sql.toString();
-    }
-
-    @Override
     public String forSelectListByQuery(JoinQueryWrapper queryWrapper) {
         return buildSelectSql(queryWrapper);
     }
@@ -199,34 +130,6 @@ public class CommonsDialectImpl implements IDialect {
         return sqlBuilder.toString();
     }
 
-    @Override
-    public String buildDeleteSql(JoinQueryWrapper queryWrapper) {
-        List<QueryTable> queryTables = CPI.getQueryTables(queryWrapper);
-        List<QueryTable> joinTables = CPI.getJoinTables(queryWrapper);
-        List<QueryTable> allTables = CollectionUtil.merge(queryTables, joinTables);
-
-        //ignore selectColumns
-        StringBuilder sqlBuilder = new StringBuilder("DELETE FROM ");
-        sqlBuilder.append(StringUtil.join(", ", queryTables, queryTable -> queryTable.toSql(this)));
-
-        buildJoinSql(sqlBuilder, queryWrapper, allTables);
-        buildWhereSql(sqlBuilder, queryWrapper, allTables);
-        buildGroupBySql(sqlBuilder, queryWrapper, allTables);
-        buildHavingSql(sqlBuilder, queryWrapper, allTables);
-
-        //ignore orderBy and limit
-        //buildOrderBySql(sqlBuilder, queryWrapper);
-        //buildLimitSql(sqlBuilder, queryWrapper);
-
-        return sqlBuilder.toString();
-    }
-
-    @Override
-    public String buildWhereConditionSql(JoinQueryWrapper queryWrapper) {
-        QueryCondition whereQueryCondition = CPI.getWhereQueryCondition(queryWrapper);
-        return whereQueryCondition != null ? whereQueryCondition.toSql(CPI.getQueryTables(queryWrapper), this) : "";
-    }
-
     protected void buildJoinSql(StringBuilder sqlBuilder, JoinQueryWrapper queryWrapper, List<QueryTable> queryTables) {
         List<Join> joins = CPI.getJoins(queryWrapper);
         if (joins != null && !joins.isEmpty()) {
@@ -250,7 +153,6 @@ public class CommonsDialectImpl implements IDialect {
         }
     }
 
-
     protected void buildGroupBySql(StringBuilder sqlBuilder, JoinQueryWrapper queryWrapper, List<QueryTable> queryTables) {
         List<QueryColumn> groupByColumns = CPI.getGroupByColumns(queryWrapper);
         if (groupByColumns != null && !groupByColumns.isEmpty()) {
@@ -267,10 +169,10 @@ public class CommonsDialectImpl implements IDialect {
         }
     }
 
-
     protected void buildHavingSql(StringBuilder sqlBuilder, JoinQueryWrapper queryWrapper, List<QueryTable> queryTables) {
         QueryCondition havingQueryCondition = CPI.getHavingQueryCondition(queryWrapper);
         if (havingQueryCondition != null) {
+        	havingQueryCondition.index = 10000;
             String havingSql = havingQueryCondition.toSql(queryTables, this);
             if (StringUtil.isNotBlank(havingSql)) {
                 sqlBuilder.append(" HAVING ").append(havingSql);
@@ -301,7 +203,6 @@ public class CommonsDialectImpl implements IDialect {
     protected StringBuilder buildLimitOffsetSql(StringBuilder sqlBuilder, JoinQueryWrapper queryWrapper, Integer limitRows, Integer limitOffset) {
         return limitOffsetProcesser.process(sqlBuilder, queryWrapper, limitRows, limitOffset);
     }
-
 
     protected String buildQuestion(int count, boolean withBrackets) {
         StringBuilder sb = new StringBuilder();

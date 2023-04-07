@@ -108,17 +108,17 @@ class WrapperUtil {
                             || object.getClass() == float[].class
                             || object.getClass() == double[].class)) {
                         for (int i = 0; i < Array.getLength(object); i++) {
-                            paras.put(condition.index + "" + i, Array.get(object, i));
+                            paras.put("p" + condition.index + "" + i, Array.get(object, i));
                         }
                     } else {
-                    	paras.put(condition.index + "" + idx, object);
+                    	paras.put("p" + condition.index + "" + idx, object);
                     }
                 }
             } else if (value instanceof JoinQueryWrapper) {
                 Map<String, Object> valueArray = ((JoinQueryWrapper) value).getValueMap();
                 paras.putAll(valueArray);
             } else {
-            	paras.put(condition.index + "", value);
+            	paras.put("p" + condition.index + "", value);
             }
         }
 

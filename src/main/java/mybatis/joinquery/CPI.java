@@ -67,7 +67,6 @@ public class CPI {
         return queryWrapper.getLimitRows();
     }
 
-
     public static String toConditionSql(QueryColumn queryColumn,List<QueryTable> queryTables, IDialect dialect) {
         return queryColumn.toConditionSql(queryTables,dialect);
     }

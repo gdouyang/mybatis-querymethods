@@ -37,7 +37,6 @@ public class BaseQueryWrapper<T> implements Serializable {
     protected Integer limitOffset;
     protected Integer limitRows;
 
-
 	protected T addSelectColumn(QueryColumn queryColumn){
         if (selectColumns == null){
             selectColumns = new LinkedList<>();
@@ -47,7 +46,6 @@ public class BaseQueryWrapper<T> implements Serializable {
         return (T) this;
     }
 
-
     protected T AddJoin(Join join){
         if (joins == null){
             joins = new LinkedList<>();
@@ -56,10 +54,9 @@ public class BaseQueryWrapper<T> implements Serializable {
         return (T) this;
     }
 
-
-    protected T setWhereQueryCondition(QueryCondition queryCondition){
+    protected T setWhereQueryCondition(QueryCondition queryCondition) {
         if (whereQueryCondition != null){
-            queryCondition.connect(whereQueryCondition,SqlConnector.AND);
+            queryCondition.connect(whereQueryCondition, SqlConnector.AND);
         }
 
         whereQueryCondition = queryCondition;
@@ -78,8 +75,6 @@ public class BaseQueryWrapper<T> implements Serializable {
         return (T) this;
     }
 
-
-
     protected T addGroupByColumns(QueryColumn queryColumn){
         if (groupByColumns == null){
             groupByColumns = new LinkedList<>();
@@ -89,8 +84,6 @@ public class BaseQueryWrapper<T> implements Serializable {
         return (T) this;
     }
 
-
-
     protected T addHavingQueryCondition(QueryCondition queryCondition,SqlConnector connector){
         if (havingQueryCondition == null){
             havingQueryCondition = queryCondition;
@@ -99,8 +92,6 @@ public class BaseQueryWrapper<T> implements Serializable {
         }
         return (T) this;
     }
-
-
 
     protected T addOrderBy(QueryOrderBy queryOrderBy){
         if (orderBys == null){
@@ -173,10 +164,6 @@ public class BaseQueryWrapper<T> implements Serializable {
 
     protected QueryCondition getHavingQueryCondition() {
         return havingQueryCondition;
-    }
-
-    protected void setHavingQueryCondition(QueryCondition havingQueryCondition) {
-        this.havingQueryCondition = havingQueryCondition;
     }
 
     protected List<QueryOrderBy> getOrderBys() {
