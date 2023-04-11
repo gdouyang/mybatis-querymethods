@@ -18,14 +18,11 @@ import mybatis.querymethods.spring.data.PartTreeFactory;
 import mybatis.querymethods.spring.data.mapping.PropertyPath;
 import mybatis.querymethods.spring.data.query.domain.Sort;
 import mybatis.querymethods.spring.data.query.parser.Part;
-import mybatis.querymethods.spring.data.query.parser.PartTree;
 import mybatis.querymethods.spring.data.query.parser.Part.Type;
+import mybatis.querymethods.spring.data.query.parser.PartTree;
 import mybatis.querymethods.spring.data.query.parser.PartTree.OrPart;
 import mybatis.querymethods.util.IfThen;
 import mybatis.querymethods.util.MsIdUtil;
-import tk.mybatis.mapper.MapperException;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.OrderBy;
 import tk.mybatis.mapper.util.StringUtil;
 
 /**

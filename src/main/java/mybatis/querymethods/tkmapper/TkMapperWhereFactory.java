@@ -238,11 +238,4 @@ public class TkMapperWhereFactory {
     return param;
   }
   
-  public static void main(String[] args) {
-    Integer[] array = new Integer[] {1,2};
-    Object obj = array;
-    List asList = Arrays.asList((Object[])obj);
-    System.out.println(asList);
-  }
-
 }

@@ -2,7 +2,6 @@ package mybatis.querymethods.util;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,12 +29,12 @@ public class MsIdUtil {
    * @return
    */
   public static String getMethodName(String msId) {
-    return cacheMethodName.getOrDefault(msId, _getMethodName(msId));
-  }
-
-  private static String _getMethodName(String msId) {
+    String methodName = cacheMethodName.get(msId);
+    if (methodName != null) {
+      return methodName;
+    }
     int lastIndexOf = msId.lastIndexOf(".");
-    String methodName = msId.substring(lastIndexOf + 1);
+    methodName = msId.substring(lastIndexOf + 1);
     cacheMethodName.put(msId, methodName);
     return methodName;
   }
@@ -47,16 +46,15 @@ public class MsIdUtil {
    * @return
    */
   public static Class<?> getMapperClass(String msId) {
-    return cacheMapperClass.getOrDefault(msId, _getMapperClass(msId));
-  }
-
-  private static Class<?> _getMapperClass(String msId) {
+    Class<?> mapperClass = cacheMapperClass.get(msId);
+    if (mapperClass != null) {
+      return mapperClass;
+    }
     int lastIndexOf = msId.lastIndexOf(".");
     String mapperName = msId.substring(0, lastIndexOf);
 
     try {
-      Class<?> mapperClass = Class.forName(mapperName);
-
+      mapperClass = Class.forName(mapperName);
       cacheMapperClass.put(msId, mapperClass);
       return mapperClass;
     } catch (ClassNotFoundException e) {
@@ -71,11 +69,11 @@ public class MsIdUtil {
    * @return
    */
   public static Class<?> getEntityClass(String msId) {
-    return cacheEntityClass.getOrDefault(msId, _getEntityClass(msId));
-  }
-
-  private static Class<?> _getEntityClass(String msId) {
-    Class<?> entityClass = getEntityClass(getMapperClass(msId));
+    Class<?> entityClass = cacheEntityClass.get(msId);
+    if (entityClass != null) {
+      return entityClass;
+    }
+    entityClass = getEntityClass(getMapperClass(msId));
     cacheEntityClass.put(msId, entityClass);
     return entityClass;
   }
