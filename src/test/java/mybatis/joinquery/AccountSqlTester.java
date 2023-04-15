@@ -10,12 +10,8 @@ import static mybatis.joinquery.QueryFunctions.noCondition;
 import static mybatis.joinquery.QueryFunctions.notExist;
 import static mybatis.joinquery.QueryFunctions.select;
 import static mybatis.joinquery.QueryFunctions.selectOne;
-
 import java.util.Arrays;
-
 import org.junit.Test;
-
-import mybatis.joinquery.JoinQueryWrapper;
 import mybatis.joinquery.dialect.CommonsDialectImpl;
 import mybatis.joinquery.dialect.DbType;
 import mybatis.joinquery.dialect.DialectFactory;

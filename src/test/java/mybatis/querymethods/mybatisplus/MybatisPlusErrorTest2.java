@@ -18,18 +18,18 @@ import mybatis.querymethods.QueryMethodsException;
 import mybatis.querymethods.QueryMethodsHelper;
 
 /**
- * 
+ * 测试property不存在时的场景findId1ById
  * @author OYGD
  *
  */
-public class Test4MybatisPlusError {
+public class MybatisPlusErrorTest2 {
 
   @Test
   public void test() {
     SqlSessionFactory sqlSessionFactory = null;
     QueryMethodsException e = null;
     try {
-      String resource = "mybatis-config-mp-error.xml";
+      String resource = "mybatis-config-mp-error2.xml";
       try {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(inputStream, null, null);

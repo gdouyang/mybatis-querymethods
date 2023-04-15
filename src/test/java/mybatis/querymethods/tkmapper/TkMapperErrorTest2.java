@@ -24,13 +24,13 @@ import tk.mybatis.mapper.mapperhelper.MapperHelper;
  * @author OYGD
  *
  */
-public class Test4TkMapperError {
+public class TkMapperErrorTest2 {
   @Test
   public void test() {
     QueryMethodsException e = null;
     SqlSessionFactory sqlSessionFactory = null;
     try {
-      String resource = "mybatis-config-tk-error.xml";
+      String resource = "mybatis-config-tk-error2.xml";
       try {
         InputStream inputStream = Resources.getResourceAsStream(resource);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
@@ -80,8 +80,9 @@ public class Test4TkMapperError {
       QueryMethodsHelper.processConfiguration(sqlSessionFactory.getConfiguration());
       
       SqlSession session = sqlSessionFactory.openSession();
-      session.getMapper(CustomerMapperError.class);
+      session.getMapper(CustomerMapperError2.class);
     } catch (QueryMethodsException e1) {
+//      e1.printStackTrace();
       e = e1;
     }
 

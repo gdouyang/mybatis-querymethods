@@ -2,10 +2,7 @@ package mybatis.joinquery;
 
 
 import static mybatis.joinquery.Tables.ARTICLE;
-
 import org.junit.Test;
-
-import mybatis.joinquery.JoinQueryWrapper;
 import mybatis.joinquery.dialect.CommonsDialectImpl;
 import mybatis.joinquery.dialect.IDialect;
 

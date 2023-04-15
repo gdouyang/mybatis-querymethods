@@ -1,4 +1,4 @@
-package mybatis.querymethods.mybatisplus;
+package mybatis.querymethods.tkmapper;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
@@ -11,35 +11,31 @@ import mybatis.querymethods.QueryMethodsTest;
  * @author OYGD
  *
  */
-public class Test4MybatisPlus extends BaseTest {
-
+public class TkMapperTest extends BaseTest {
   @Test
   public void test() {
     SqlSession session = sqlSessionFactory.openSession();
 
     try {
-      CustomerMapperMp mapper = session.getMapper(CustomerMapperMp.class);
+      Integer id = 1;
+      CustomerMapper mapper = session.getMapper(CustomerMapper.class);
 
-      QueryMethodsTest.log("deleteById");
-      int id = 1;
-      mapper.deleteById(id);
+      QueryMethodsTest.log("deleteByPrimaryKey");
+      mapper.deleteByPrimaryKey(id);
 
-      QueryMethodsTest.log("insert");
+      QueryMethodsTest.log("insert1");
       Customer b = new Customer();
       b.setId(id);
       b.setFirstName("OY");
       b.setLastName("GD");
-      mapper.insert(b);
-
-
+      mapper.insert1(b);
+      
       QueryMethodsTest.test(mapper, b);
-
 
     } finally {
       session.commit();
       session.close();
     }
   }
-
 
 }

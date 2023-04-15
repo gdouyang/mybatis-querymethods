@@ -1,16 +1,9 @@
 package mybatis.querymethods.tkmapper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.Arrays;
-
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-
+import mybatis.Init;
 import mybatis.querymethods.QueryMethodsConfig;
 import mybatis.querymethods.QueryMethodsHelper;
 import tk.mybatis.mapper.common.Mapper;
@@ -22,31 +15,15 @@ public class BaseTest {
   public BaseTest() {}
 
   SqlSessionFactory sqlSessionFactory = null;
+  
+  Init init = new Init();
 
   @Before
   public void before() {
 
     String resource = "mybatis-config-tk.xml";
-    try {
-      InputStream inputStream = Resources.getResourceAsStream(resource);
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    SqlSession session = sqlSessionFactory.openSession();
-    try {
-        session.getConnection().prepareStatement(
-  				"create table if not exists customer (id bigint primary key not null,"
-  				+ " first_name varchar(255),"
-  				+ " last_name varchar(255),"
-  				+ " active tinyint)").execute();
-    } catch (SQLException e) {
-		e.printStackTrace();
-	} finally {
-    	session.commit();
-		session.close();
-	}
-
+    init.setup(resource);
+    sqlSessionFactory = init.sqlSessionFactory;
     // 创建一个MapperHelper
     MapperHelper mapperHelper = new MapperHelper();
     // 特殊配置
