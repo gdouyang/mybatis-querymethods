@@ -1,4 +1,4 @@
 package mybatis.joinquery;
 
-public interface AccountMapper  {
+public interface AccountMapper extends JoinQueryMapper<Account> {
 }

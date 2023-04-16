@@ -47,6 +47,10 @@ public class DialectFactory {
         DbType dbType = Optional.ofNullable(dbTypeThreadLocal.get()).orElse(DbType.MYSQL);
         return dialectMap.computeIfAbsent(dbType, DialectFactory::createDialect);
     }
+    
+    public static IDialect getDialect(DbType dbType) {
+      return dialectMap.computeIfAbsent(dbType, DialectFactory::createDialect);
+    }
 
     /**
      * 设置当前线程的 dbType

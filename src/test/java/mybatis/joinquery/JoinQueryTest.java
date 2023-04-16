@@ -7,9 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import mybatis.Init;
 
-public class BaseTest {
-
-  public BaseTest() {}
+public class JoinQueryTest {
 
   SqlSessionFactory sqlSessionFactory = null;
 
@@ -27,6 +25,7 @@ public class BaseTest {
     SqlSession session = sqlSessionFactory.openSession();
 
     try {
+      AccountMapper mapper = session.getMapper(AccountMapper.class);
       {
         JoinQueryWrapper queryWrapper = JoinQueryWrapper.create()
             .select(Tables.ACCOUNT.ID, Tables.ACCOUNT.USER_NAME.as("userName"), Tables.ACCOUNT.AGE,
@@ -35,16 +34,18 @@ public class BaseTest {
             .on(Tables.ACCOUNT.ID.eq(Tables.ARTICLE.ACCOUNT_ID))
             .where(Tables.ACCOUNT.AGE.in(10, 11, 12)).having(Tables.ACCOUNT.AGE.between(18, 25))
             .where(Tables.ACCOUNT.AGE.in(10, 11, 12));
-        List<Account> selectListByQuery = JoinQuery.queryList(session, queryWrapper, Account.class);
+        
+        List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
         System.out.println("result: " + selectListByQuery);
       }
       
       {
-        JoinQueryWrapper query1 = JoinQueryWrapper.create()
+        JoinQueryWrapper queryWrapper = JoinQueryWrapper.create()
             .select(Tables.ACCOUNT.ID, Tables.ACCOUNT.USER_NAME.as("userName"), Tables.ACCOUNT.AGE,
                 Tables.ACCOUNT.SEX)
             .from(Tables.ACCOUNT);
-        List<Account> selectListByQuery = JoinQuery.queryList(session, query1, Account.class);
+        List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
+//        List<Account> selectListByQuery = JoinQuery.queryList(session, query1, Account.class);
         System.out.println("result1: " + selectListByQuery);
       }
     } finally {

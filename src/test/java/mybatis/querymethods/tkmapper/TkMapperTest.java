@@ -22,6 +22,7 @@ public class TkMapperTest extends BaseTest {
 
       QueryMethodsTest.log("deleteByPrimaryKey");
       mapper.deleteByPrimaryKey(id);
+      mapper.deleteByPrimaryKey(id);
 
       QueryMethodsTest.log("insert1");
       Customer b = new Customer();
