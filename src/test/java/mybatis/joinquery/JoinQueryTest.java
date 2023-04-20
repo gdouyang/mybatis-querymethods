@@ -48,6 +48,15 @@ public class JoinQueryTest {
 //        List<Account> selectListByQuery = JoinQuery.queryList(session, query1, Account.class);
         System.out.println("result1: " + selectListByQuery);
       }
+      {
+        JoinQueryWrapper queryWrapper = JoinQueryWrapper.create()
+            .select(Tables.ACCOUNT.ID, Tables.ACCOUNT.USER_NAME.as("userName"), Tables.ACCOUNT.AGE,
+                Tables.ACCOUNT.SEX)
+            .from(Tables.ACCOUNT)
+            .where(Tables.ACCOUNT.USER_NAME.like("长"));
+        List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
+        System.out.println("result1: " + selectListByQuery);
+      }
     } finally {
       session.close();
     }
