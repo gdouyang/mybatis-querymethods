@@ -21,10 +21,6 @@ public interface IDialect {
 
     String wrap(String keyword);
 
-    String forSelectListByQuery(JoinQueryWrapper queryWrapper);
-
-    String forSelectCountByQuery(JoinQueryWrapper queryWrapper);
-
     String buildSelectSql(JoinQueryWrapper queryWrapper);
 
     String buildSelectCountSql(JoinQueryWrapper queryWrapper);

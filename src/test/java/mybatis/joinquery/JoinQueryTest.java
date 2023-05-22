@@ -1,11 +1,13 @@
 package mybatis.joinquery;
 
+import java.util.Arrays;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
 import org.junit.Test;
 import mybatis.Init;
+import mybatis.joinquery.dialect.DbType;
 import mybatis.joinquery.util.JoinQueryUtil;
 
 public class JoinQueryTest {
@@ -38,6 +40,8 @@ public class JoinQueryTest {
         
         List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
         System.out.println("result: " + selectListByQuery);
+        System.out.println("jdbc sql: " + JoinQueryUtil.querySqlJdbc(DbType.MYSQL, queryWrapper));
+        System.out.println("jdbc params: " + Arrays.toString(queryWrapper.getValueArray()));
       }
       
       {
@@ -57,6 +61,8 @@ public class JoinQueryTest {
             .where(Tables.ACCOUNT.USER_NAME.like("长"));
         List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
         System.out.println("result1: " + selectListByQuery);
+        System.out.println("jdbc sql: " + JoinQueryUtil.querySqlJdbc(DbType.MYSQL, queryWrapper));
+        System.out.println("jdbc params: " + Arrays.toString(queryWrapper.getValueArray()));
       }
       {
         JoinQueryWrapper queryWrapper = JoinQueryWrapper.create()
@@ -65,6 +71,7 @@ public class JoinQueryTest {
             .from(Tables.ACCOUNT);
         int count = JoinQueryUtil.count(session, queryWrapper);
         System.out.println("count: " + count);
+        
       }
     } finally {
       session.close();

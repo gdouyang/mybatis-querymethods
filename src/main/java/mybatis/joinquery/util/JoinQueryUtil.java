@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 import javax.sql.DataSource;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -62,6 +63,29 @@ public class JoinQueryUtil {
     Map<String, Object> parameter = wrapper.getValueMap();
     Integer selectList = sqlSession.selectOne(sql, parameter);
     return selectList;
+  }
+  
+  static Pattern pattern = Pattern.compile("#\\{\\w+\\}");
+  /**
+   * 把#{p0}替换成 ?
+   * @param dbType
+   * @param wrapper
+   * @return
+   */
+  public static String querySqlJdbc(DbType dbType, JoinQueryWrapper wrapper) {
+    String sql = DialectFactory.getDialect(dbType).buildSelectSql(wrapper);
+    return pattern.matcher(sql).replaceAll("?");
+  }
+  
+  /**
+   * 把#{p0}替换成 ?
+   * @param dbType
+   * @param wrapper
+   * @return
+   */
+  public static String countSqlJdbc(DbType dbType, JoinQueryWrapper wrapper) {
+    String sql = DialectFactory.getDialect(dbType).buildSelectCountSql(wrapper);
+    return pattern.matcher(sql).replaceAll("?");
   }
 
   /**

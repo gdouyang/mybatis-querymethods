@@ -45,17 +45,6 @@ public class CommonsDialectImpl implements IDialect {
     return keywordWrap.wrap(keyword);
   }
 
-  @Override
-  public String forSelectListByQuery(JoinQueryWrapper queryWrapper) {
-    return buildSelectSql(queryWrapper);
-  }
-
-
-  @Override
-  public String forSelectCountByQuery(JoinQueryWrapper queryWrapper) {
-    return buildSelectCountSql(queryWrapper);
-  }
-
   //////////// build query sql///////
   @Override
   public String buildSelectSql(JoinQueryWrapper queryWrapper) {

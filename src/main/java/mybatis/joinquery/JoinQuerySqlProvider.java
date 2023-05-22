@@ -42,7 +42,7 @@ public class JoinQuerySqlProvider {
             throw new IllegalArgumentException("joinQueryWrapper can not be null.");
         }
         
-        String sql = DialectFactory.getDialect().forSelectListByQuery(queryWrapper);
+        String sql = DialectFactory.getDialect().buildSelectSql(queryWrapper);
         if (logger.isDebugEnabled()) {
         	logger.debug(sql);
         }
@@ -70,7 +70,7 @@ public class JoinQuerySqlProvider {
         	throw new IllegalArgumentException("joinQueryWrapper can not be null.");
         }
 
-        String sql = DialectFactory.getDialect().forSelectCountByQuery(queryWrapper);
+        String sql = DialectFactory.getDialect().buildSelectCountSql(queryWrapper);
         if (logger.isDebugEnabled()) {
         	logger.debug(sql);
         }
