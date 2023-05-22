@@ -328,7 +328,11 @@ public class JoinQueryWrapper extends BaseQueryWrapper<JoinQueryWrapper> {
         return ArrayUtil.concat(whereValues, havingValues);
     }
     
-    Map<String, Object> getValueMap() {
+    /**
+     * 获取 queryWrapper 的参数
+     * 在构建 sql 的时候，需要保证 where 在 having 的前面
+     */
+    public Map<String, Object> getValueMap() {
     	Map<String, Object> whereValues = WrapperUtil.getValuesMap(whereQueryCondition);
     	Map<String, Object> havingValues = WrapperUtil.getValuesMap(havingQueryCondition);
     	if (havingValues != null) {

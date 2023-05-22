@@ -1,4 +1,4 @@
-package mybatis.joinquery;
+package mybatis.joinquery.util;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,12 +14,13 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
+import mybatis.joinquery.JoinQueryWrapper;
 import mybatis.joinquery.dialect.DbType;
 import mybatis.joinquery.dialect.DbTypeUtil;
 import mybatis.joinquery.dialect.DialectFactory;
 
-public class JoinQuery {
-  private JoinQuery() {}
+public class JoinQueryUtil {
+  private JoinQueryUtil() {}
 
   // 缓存
   private static Map<String, DbType> urlDbTypeMap = new ConcurrentHashMap<>();
@@ -28,26 +29,39 @@ public class JoinQuery {
   public static <T> List<T> queryList(SqlSession sqlSession, JoinQueryWrapper wrapper, Class<T> resultType) {
     Configuration configuration = sqlSession.getConfiguration();
     DbType dbType = getDbType(configuration);
-    try {
-      DialectFactory.setHintDbType(dbType);
-      
-      String sql = DialectFactory.getDialect().buildSelectSql(wrapper);
-      if (!configuration.hasStatement(sql)) {
-        RawSqlSource sqlSource = new RawSqlSource(configuration, sql, Map.class);
-        MappedStatement.Builder builder = new MappedStatement.Builder(configuration, sql, sqlSource, SqlCommandType.SELECT);
-        List<ResultMap> resultMaps = new ArrayList<>(); 
-        resultMaps.add(new ResultMap.Builder(configuration, "defaultResultMap", resultType, new ArrayList<>(0))
-                .build());
-        builder.resultMaps(resultMaps);
-        MappedStatement ms = builder.build();
-        configuration.addMappedStatement(ms);
-      }
-      Map<String, Object> parameter = wrapper.getValueMap();
-      List<T> selectList = sqlSession.selectList(sql, parameter);
-      return selectList;
-    } finally {
-      DialectFactory.clearHintDbType();
+    String sql = DialectFactory.getDialect(dbType).buildSelectSql(wrapper);
+    if (!configuration.hasStatement(sql)) {
+      RawSqlSource sqlSource = new RawSqlSource(configuration, sql, Map.class);
+      MappedStatement.Builder builder = new MappedStatement.Builder(configuration, sql, sqlSource, SqlCommandType.SELECT);
+      List<ResultMap> resultMaps = new ArrayList<>(); 
+      resultMaps.add(new ResultMap.Builder(configuration, "defaultResultMap", resultType, new ArrayList<>(0))
+              .build());
+      builder.resultMaps(resultMaps);
+      MappedStatement ms = builder.build();
+      configuration.addMappedStatement(ms);
     }
+    Map<String, Object> parameter = wrapper.getValueMap();
+    List<T> selectList = sqlSession.selectList(sql, parameter);
+    return selectList;
+  }
+  
+  public static Integer count(SqlSession sqlSession, JoinQueryWrapper wrapper) {
+    Configuration configuration = sqlSession.getConfiguration();
+    DbType dbType = getDbType(configuration);
+    String sql = DialectFactory.getDialect(dbType).buildSelectCountSql(wrapper);
+    if (!configuration.hasStatement(sql)) {
+      RawSqlSource sqlSource = new RawSqlSource(configuration, sql, Map.class);
+      MappedStatement.Builder builder = new MappedStatement.Builder(configuration, sql, sqlSource, SqlCommandType.SELECT);
+      List<ResultMap> resultMaps = new ArrayList<>(); 
+      resultMaps.add(new ResultMap.Builder(configuration, "defaultResultMap", Integer.class, new ArrayList<>(0))
+              .build());
+      builder.resultMaps(resultMaps);
+      MappedStatement ms = builder.build();
+      configuration.addMappedStatement(ms);
+    }
+    Map<String, Object> parameter = wrapper.getValueMap();
+    Integer selectList = sqlSession.selectOne(sql, parameter);
+    return selectList;
   }
 
   /**

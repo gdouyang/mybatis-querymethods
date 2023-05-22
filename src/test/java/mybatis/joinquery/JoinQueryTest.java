@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
 import org.junit.Test;
 import mybatis.Init;
+import mybatis.joinquery.util.JoinQueryUtil;
 
 public class JoinQueryTest {
 
@@ -45,7 +46,7 @@ public class JoinQueryTest {
                 Tables.ACCOUNT.SEX)
             .from(Tables.ACCOUNT);
         List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
-//        List<Account> selectListByQuery = JoinQuery.queryList(session, query1, Account.class);
+//        List<Account> selectListByQuery = JoinQueryUtil.queryList(session, query1, Account.class);
         System.out.println("result1: " + selectListByQuery);
       }
       {
@@ -56,6 +57,14 @@ public class JoinQueryTest {
             .where(Tables.ACCOUNT.USER_NAME.like("长"));
         List<Account> selectListByQuery = mapper.selectListByJoinQuery(queryWrapper);
         System.out.println("result1: " + selectListByQuery);
+      }
+      {
+        JoinQueryWrapper queryWrapper = JoinQueryWrapper.create()
+            .select(Tables.ACCOUNT.ID, Tables.ACCOUNT.USER_NAME.as("userName"), Tables.ACCOUNT.AGE,
+                Tables.ACCOUNT.SEX)
+            .from(Tables.ACCOUNT);
+        int count = JoinQueryUtil.count(session, queryWrapper);
+        System.out.println("count: " + count);
       }
     } finally {
       session.close();

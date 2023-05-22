@@ -10,9 +10,9 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-import mybatis.joinquery.JoinQuery;
 import mybatis.joinquery.dialect.DbType;
 import mybatis.joinquery.dialect.DialectFactory;
+import mybatis.joinquery.util.JoinQueryUtil;
 
 /**
  * 查询方法拦截器
@@ -33,7 +33,7 @@ public class DbTypeInterceptor implements Interceptor {
   public Object intercept(Invocation invocation) throws Throwable {
     Object[] args = invocation.getArgs();
     MappedStatement ms = (MappedStatement) args[0];
-    DbType dbType = JoinQuery.getDbType(ms.getConfiguration());
+    DbType dbType = JoinQueryUtil.getDbType(ms.getConfiguration());
     try {
       DialectFactory.setHintDbType(dbType);
       return invocation.proceed();

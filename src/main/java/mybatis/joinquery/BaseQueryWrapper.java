@@ -257,7 +257,7 @@ public class BaseQueryWrapper<T> implements Serializable {
   protected void buildHavingSql(StringBuilder sqlBuilder, List<QueryTable> queryTables,
       IDialect dialect) {
     if (havingQueryCondition != null) {
-      havingQueryCondition.index = 10000;
+      havingQueryCondition.index = 100000;
       String havingSql = havingQueryCondition.toSql(queryTables, dialect);
       if (StringUtil.isNotBlank(havingSql)) {
         sqlBuilder.append(" HAVING ").append(havingSql);
