@@ -1,2 +1,2 @@
-mybatis.joinquery.processer.TkMapperQueryEntityProcesser
-mybatis.joinquery.processer.MybatisPlusQueryEntityProcesser
+joinquery.processer.TkMapperQueryEntityProcesser
+joinquery.processer.MybatisPlusQueryEntityProcesser

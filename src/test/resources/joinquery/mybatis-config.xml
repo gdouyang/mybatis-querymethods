@@ -8,7 +8,7 @@
   </settings>
   
   <plugins>
-    <plugin interceptor="mybatis.joinquery.interceptor.DbTypeInterceptor"></plugin>
+    <plugin interceptor="joinquery.interceptor.DbTypeInterceptor"></plugin>
   </plugins>
   
   <environments default="development">

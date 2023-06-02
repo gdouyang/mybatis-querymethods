@@ -8,7 +8,7 @@
   </settings>
   
   <plugins>
-  	<plugin interceptor="mybatis.querymethods.intercepts.QueryMethodsInterceptor"></plugin>
+  	<plugin interceptor="querymethods.intercepts.QueryMethodsInterceptor"></plugin>
   </plugins>
   
   <environments default="development">
@@ -16,7 +16,7 @@
       <transactionManager type="JDBC"/>
       <dataSource type="POOLED">
         <property name="driver" value="org.h2.Driver"/>
-        <property name="url" value="jdbc:h2:mem:querymethods;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;"/>
+        <property name="url" value="jdbc:h2:mem:mp2;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;"/>
         <property name="username" value="sa"/>
         <property name="password" value=""/>
       </dataSource>
