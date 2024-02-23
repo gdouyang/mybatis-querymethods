@@ -137,6 +137,9 @@ public class QueryMethodsTest {
     log("findDistinctFirstNameById");
     firstName = mapper.findDistinctFirstNameById(id);
     assertEquals("OY", firstName);
+    
+    log("findNameByIdOrFirstNameAndId");
+    mapper.findByIdOrFirstNameAndId(id, "OY", id);
 
     log("deleteByFirstNameAndId");
     int num = mapper.deleteByFirstName("test");

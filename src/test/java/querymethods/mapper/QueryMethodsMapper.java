@@ -160,6 +160,9 @@ public interface QueryMethodsMapper {
   @Select("")
   String findDistinctFirstNameById(Integer id);
 
+  // (id = ? OR first_name = ?) AND id = ?
+  @Select("")
+  List<Customer> findByIdOrFirstNameAndId(Integer id, String name, Integer id1);
   /** DELETE FROM customer WHERE ( ( first_name = ? ) ) */
   @Delete("")
   int deleteByFirstName(String name);
