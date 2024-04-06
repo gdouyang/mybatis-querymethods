@@ -62,32 +62,37 @@ public abstract class AbstractQueryEntityProcesser extends AbstractProcessor {
       + "import joinquery.TableDef;\n" //
       + "\n" //
       + "// Auto generate by mybatis-joinquery, do not modify it.\n" //
-      + "public class Tables {\n" //
+//      + "public class Tables {\n" //
       + "@classesInfo"//
-      + "}\n";
+//      + "}\n"
+      ;
 
   private static final String tableDefTemplate =
-      "\n\n    public static final @entityClassTableDef @tableField = new @entityClassTableDef(\"@tableName\");\n";
+      "\n  public static final @entityClassTableDef @tableField = new @entityClassTableDef(\"@tableName\");\n";
 
 
   private static final String classTemplate = "\n" //
-      + "    public static class @entityClassTableDef extends TableDef {\n" //
+      + "public class @entityClassTableDef extends TableDef {\n" //
+      + "  private static final long serialVersionUID = 1L;\n" //
+      + "@staticTableDef" //
       + "\n"//
       + "@queryColumns" //
       + "@defaultColumns" //
       + "@allColumns" //
       + "\n"//
-      + "        public @entityClassTableDef(String tableName) {\n"//
-      + "            super(tableName);\n" + "        }\n" + "    }\n";
+      + "  public @entityClassTableDef(String tableName) {\n"//
+      + "    super(tableName);\n" // 
+      + "  }\n" //
+      + "}\n";//
 
 
   private static final String columnsTemplate =
-      "        public QueryColumn @property = new QueryColumn(this, \"@columnName\");\n";
+      "  public QueryColumn @property = new QueryColumn(this, \"@columnName\");\n";
 
   private static final String defaultColumnsTemplate =
-      "\n        public QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{@allColumns};\n";
+      "\n  public QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{@allColumns};\n";
   private static final String allColumnsTemplate =
-      "        public QueryColumn[] ALL_COLUMNS = new QueryColumn[]{@allColumns};\n\n";
+      "  public QueryColumn[] ALL_COLUMNS = new QueryColumn[]{@allColumns};\n\n";
 
   protected Filer filer;
 
@@ -126,18 +131,16 @@ public abstract class AbstractQueryEntityProcesser extends AbstractProcessor {
     }
     String genPath = this.options.getGenPath();
     String genTablesPackage = this.options.getTablesPackage();
-    String className = this.options.getTablesClassName();
 
     StringBuilder guessPackage = new StringBuilder();
 
-    StringBuilder tablesContent = new StringBuilder();
     elementsAnnotatedWith.forEach((Consumer<Element>) entityClassElement -> {
 
       if (entityClassElement.getAnnotation(Ignore.class) != null) {
         return;
       }
-
-      String tableName = firstCharToLowerCase(entityClassElement.getSimpleName().toString());
+      String javaClassName = entityClassElement.getSimpleName().toString();
+      String tableName = firstCharToLowerCase(javaClassName);
       String n = getTableName(entityClassElement);
       if (n != null && !n.isEmpty()) {
         tableName = n;
@@ -181,18 +184,14 @@ public abstract class AbstractQueryEntityProcesser extends AbstractProcessor {
         }
       }
 
-      String entityClassName = entityClassElement.getSimpleName().toString();
-      tablesContent
-          .append(buildTablesClass(entityClassName, tableName, propertyAndColumns, defaultColumns));
+      String tablesContent = buildTablesClass(javaClassName, tableName, propertyAndColumns, defaultColumns);
 
-    });
-
-    if (tablesContent.length() > 0) {
       String realGenPackage = genTablesPackage == null || genTablesPackage.trim().length() == 0
           ? guessPackage.toString()
-          : genTablesPackage.trim();
-      genTablesClass(genPath, realGenPackage, className, tablesContent.toString());
-    }
+              : genTablesPackage.trim();
+      genTablesClass(genPath, realGenPackage, javaClassName + "TableDef", tablesContent);
+    });
+
 
     return false;
   }
@@ -230,10 +229,12 @@ public abstract class AbstractQueryEntityProcesser extends AbstractProcessor {
 
 
     String tableClass = classTemplate.replace("@entityClass", entityClass)
-        .replace("@queryColumns", queryColumns).replace("@defaultColumns", defaultColumnsString)
+        .replace("@staticTableDef", tableDef)
+        .replace("@queryColumns", queryColumns)
+        .replace("@defaultColumns", defaultColumnsString)
         .replace("@allColumns", allColumnsString);
 
-    return tableDef + tableClass;
+    return tableClass;
   }
 
 
