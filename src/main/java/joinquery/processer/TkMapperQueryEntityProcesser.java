@@ -13,6 +13,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 public class TkMapperQueryEntityProcesser extends AbstractQueryEntityProcesser {
+  
+  public TkMapperQueryEntityProcesser() {}
 
   @Override
   public String getTableName(Element t) {

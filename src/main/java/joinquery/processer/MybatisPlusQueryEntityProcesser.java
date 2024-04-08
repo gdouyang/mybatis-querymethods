@@ -12,6 +12,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 public class MybatisPlusQueryEntityProcesser extends AbstractQueryEntityProcesser {
+  
+  public MybatisPlusQueryEntityProcesser() {}
 
   @Override
   public String getTableName(Element t) {
