@@ -30,7 +30,9 @@ public class MPTableInfo {
   }
 
   public void addPropertyColumn(String property, String column) {
-    this.map.put(property, column);
+    if (null != property) {
+      this.map.put(property, column);
+    }
   }
 
 }

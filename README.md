@@ -273,30 +273,3 @@ public interface CustomerMapper extends Mapper<Customer> {
 
 }
 ```
-
-```
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <configuration>
-        <source>1.8</source>
-        <target>1.8</target>
-        <annotationProcessorPaths>
-        	<path>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.12</version>
-            </path>
-            <path>
-                <groupId>com.github.gdouyang</groupId>
-				<artifactId>mybatis-querymethods</artifactId>
-				<version>0.1.5-RELEASE</version>
-            </path>
-        </annotationProcessorPaths>
-        <!-- <compilerArgs>
-        	<compilerArg>-Ajoinqueryprocess.tablesPackage=curd.generator</compilerArg>
-        </compilerArgs> -->
-    </configuration>
-</plugin>
-```
-

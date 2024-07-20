@@ -99,6 +99,13 @@ public interface QueryMethodsMapper {
    */
   @Select("")
   List<Customer> findByIdIn(List<Integer> idList);
+  
+  /**
+   * SELECT id,first_name,last_name,active,create_time_ FROM customer WHERE ( ( id in ( ? , ? , ? )
+   * ) )
+   */
+  @Select("")
+  List<Customer> findByIdInAndIdIn(List<Integer> idList, List<Integer> idList1);
 
   /**
    * SELECT id,first_name,last_name,active,create_time_ FROM customer WHERE ( ( id not in ( ? , ? ,

@@ -86,6 +86,11 @@ public class QueryMethodsTest {
     assertTrue(list != null && list.size() > 0);
     assertNotNull(list.get(0));
     
+    log("findByIdInAndIdIn");
+    list = mapper.findByIdInAndIdIn(asList, asList);
+    assertTrue(list != null && list.size() > 0);
+    assertNotNull(list.get(0));
+    
     log("findByIdNotIn");
     list = mapper.findByIdNotIn(asList);
     Assert.isTrue(list != null && list.size() == 0, "错误");
