@@ -5,6 +5,13 @@ import org.apache.ibatis.session.SqlSession;
 
 public class Init {
 
+  public static final String CREATE_CUSTOMER_SQL = "create table if not exists customer ("
+  + " id bigint primary key not null,"
+  + " first_name varchar(255),"
+  + " last_name varchar(255),"
+  + " create_time_ datetime,"
+  + " active tinyint);";
+
   public static void setup(SqlSession session) {
       try {
           session.getConnection().prepareStatement(
@@ -23,12 +30,7 @@ public class Init {
                   + "1, '1212', '标题', '文章内容', 1, 0)").execute();
           
           session.getConnection().prepareStatement(
-              "create table if not exists customer ("
-              + " id bigint primary key not null,"
-              + " first_name varchar(255),"
-              + " last_name varchar(255),"
-              + " create_time_ datetime,"
-              + " active tinyint)").execute();
+              CREATE_CUSTOMER_SQL).execute();
           
       } catch (SQLException e) {
           e.printStackTrace();

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 每隔一分钟扫描配置文件 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 设置上下文名称为 demo -->
+    <contextName>demo</contextName>
+    <!-- 定义日志输出格式变量：%d表示时间 花括号内为时间格式 %level表示日志级别 %thread表示线程名 %logger{0}表示输出日志的类名 [%line]表示行号用方括号包裹 %msg表示日志消息 %n换行 -->
+    <property name="log.pattern" value="[%d{'MM-dd HH:mm:ss,SSS'}] %level [%thread] %logger{0}[%line] - %msg%n"/>
+    <!-- 定义日志字符集 -->
+    <property name="log.charset" value="UTF-8"/>
+    <!-- 定义日志级别 -->
+    <property name="log.level" value="DEBUG"/>
+    <!-- 定义日志存放路径 -->
+    <property name="log.path" value="logs"/>
+
+    <!-- 输出到控制台 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志输出格式 -->
+        <encoder>
+            <!-- 日志字符集 -->
+            <charset>${log.charset}</charset>
+            <!-- 日志输出格式 -->
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根 logger -->
+    <root level="${log.level}">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
