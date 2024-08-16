@@ -12,6 +12,7 @@ import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.core.toolkit.ParameterUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import querymethods.spring.data.PartTreeFactory;
 import querymethods.spring.data.mapping.PropertyPath;
@@ -85,6 +86,13 @@ public class MybatisPlusWhereFactory {
     }
     ParamMap<Object> pm = new ParamMap<>();
     pm.put(Constants.WRAPPER, wrapper);
+    if (!params.isEmpty()) {
+    	for (Object p : params) {
+    		ParameterUtils.findPage(p).ifPresent(page -> {
+    			pm.put("$querymethods-ipage", page);
+    		});
+		}
+    }
     return pm;
   }
   
