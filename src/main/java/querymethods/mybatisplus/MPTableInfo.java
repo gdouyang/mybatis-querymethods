@@ -16,7 +16,9 @@ public class MPTableInfo {
 
   public MPTableInfo(TableInfo tableInfo) {
     if (tableInfo != null) {
-      this.addPropertyColumn(tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
+      if (tableInfo.getKeyProperty() != null) {
+        this.addPropertyColumn(tableInfo.getKeyProperty(), tableInfo.getKeyColumn());
+      }
       if (tableInfo.getFieldList() != null && !tableInfo.getFieldList().isEmpty()) {
         for (TableFieldInfo fieldInfo : tableInfo.getFieldList()) {
           this.addPropertyColumn(fieldInfo.getProperty(), fieldInfo.getColumn());
